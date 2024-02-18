@@ -1,7 +1,7 @@
 # [enterprise-kotlin-handbook][0001]
 
-Some exercises to explore out how modenr, enterprise grade services can be
-written in kotlin. It's slightliy opinionated, proceed at your own risk.
+Some exercises to explore out how modern, enterprise grade services can be
+written in kotlin. It's slightly opinionated, proceed at your own risk.
 
 ## Motivation
 
@@ -12,25 +12,24 @@ This doc go as a gentle approach on how to provision projects using kotlin over
 java in enterprise solutions with [spring boot][0003].
 
 The ecosystem around the JVM spans in time over decades and the problems solved
-goes beyond thousends of reusable libraries. Get access to shuch richness with
-any imaginable stack is a big deal and deserves atention in order to save time,
+goes beyond thousands of reusable libraries. Get access to such richness with
+any imaginable stack is a big deal and deserves attention in order to save time,
 health and money when starting something new or maintaining battle-tested
 solutions out there.
 
 ## Before we start
 
-Some people might have a solid background on other stacks.
-[Frontend Javascript/Typescript][0004], for example. Whenever handy,
+Some people might have a solid background on other stacks, for example
+[Frontend Javascript/Typescript][0004], to cite a popular one. Whenever handy,
 some comparison will be presented.
 
-## How this guide is structure
+## How this guide is structured
 
 This is a [monorepo/multiproject][0005], which usually is a bad idea but in this
-case we mainly host documentation but offer sample projects to better explore a
-subject being presented.
+case we mainly host documentation, so offer sample projects to better explore a
+subject being presented is ok.
 
-So, main docs resides in [docs](docs) folder, samples in [samples][samples]
-folder.
+Main docs resides in [docs](docs) folder, samples in [samples](samples) folder.
 
 ## How to contribute
 
