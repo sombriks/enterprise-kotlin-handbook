@@ -7,3 +7,11 @@
 ## Initialize a spring boot project
 
 ## The `spring-boot-starter-web`
+
+## Notable spring stereotypes annotations
+
+## Spring profiles and environment variables
+
+## Notable spring configuration annotations
+
+## Difference between spring framework and spring boot
