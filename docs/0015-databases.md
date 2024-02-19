@@ -1,6 +1,18 @@
 # Gentle introduction to relational databases
 
-## the SQL language
+## Cool database runtimes
+
+### SQLite
+
+### H2
+
+### MySQL
+
+### PostgreSQL, the open-source and enterprise one
+
+## Cool database clients
+
+## The SQL language
 
 ### DDL
 
@@ -19,13 +31,3 @@
 #### order by, limit, offset, group by
 
 #### window functions
-
-## Cool database runtimes
-
-### SQLite
-
-### H2
-
-### MySQL
-
-### PostgreSQL, the open-source and enterprise one

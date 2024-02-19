@@ -10,7 +10,7 @@
 
 ### EntityManager
 
-### Repositories
+## Spring data repositories
 
 ## Database Migrations
 

@@ -1,8 +1,10 @@
 # Spring(Boot), the _de-facto_ enterprise java (and more!) standard
 
+## Before we start - The "D" in SOLID
+
 ## History the way i remember
 
-## Before we start - The "D" in SOLID
+## Difference between spring framework and spring boot
 
 ## Initialize a spring boot project
 
@@ -13,5 +15,3 @@
 ## Spring profiles and environment variables
 
 ## Notable spring configuration annotations
-
-## Difference between spring framework and spring boot
