@@ -65,9 +65,19 @@ There will be a more detailed section on it in the [next chapter][0105].
 
 We'll discuss classes in details [later][0105].
 
+### Destructuring
+
+| Kotlin                                           | Javascript                           |
+|--------------------------------------------------|--------------------------------------|
+| // lists                                         |                                      |
+| val (first, second) = listOf(1,2,3)              | const [first, second] = [1,2,3]      |
+| // maps (works with [classes][0116] too)         |                                      |
+| val (first, second) = listOf("a" to 1, "b" to 2) | const {first, second} = {a: 1, b: 2} |
+
 ## Communities to talk about the language
 
-
+- [slack][0114]
+- [reddit][0115]
 
 ## Noteworthy extras
 
@@ -85,3 +95,6 @@ We'll discuss classes in details [later][0105].
 [0111]: https://central.sonatype.com/search
 [0112]: 0012-project-setup-with-maven-and-gradle.md
 [0113]: https://npm.runkit.com/
+[0114]: https://surveys.jetbrains.com/s3/kotlin-slack-sign-up
+[0115]: https://www.reddit.com/r/Kotlin/
+[0116]: https://kotlinlang.org/docs/destructuring-declarations.html#example-returning-two-values-from-a-function
