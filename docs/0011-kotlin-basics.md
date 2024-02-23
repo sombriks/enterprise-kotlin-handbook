@@ -58,31 +58,112 @@ $ kotlinc -e 'println("hello!")'
 hello!
 ```
 
+### Project: Basic output - Hello world
+
 Kotlin files ends with the .kt extension and in order to be executable they need
 a main function:
 
 ```bash
-echo 'fun main () { println("hello!") }' > hello.kt
-kotlinc hello.kt
+echo 'fun main () { println("hello!") }' > HelloWorld.kt
+kotlinc HelloWorld.kt
 
-kotlin HelloKt
+kotlin HelloWorldKt
 hello!
 ```
 
 Since kotlin runs on top of jvm:
 
 ```bash
-java HelloKt
+java HelloWorldKt
 hello!
 ```
+
+See [project 001][0159] for further details.
+
+## Project: Files and packages
+
+One important thing to master is how kotlin manages the source code
+modularization. It's pretty much what java and python and other languages does.
+
+Given two distinct kotlin files:
+
+```kotlin
+// file1.kt
+fun hey() = "hey!"
+```
+
+```kotlin
+// file2.kt
+fun main() { println(hey()) }
+```
+
+You will need to compile the scripts:
+
+```bash
+kotlinc *.kt
+```
+
+It will produce two .class files:
+
+```bash
+$ ls
+file1.kt  File1Kt.class  file2.kt  File2Kt.class  META-INF  README.md
+```
+
+As you can see, the kotlin compiler "helped" you and used proper camel case on
+the file names.
+
+To run this code:
+
+```bash
+$ kotlin File2Kt
+hey!
+```
+
+Any attempt to run `File1Kt` ends up in error since that class has no main
+function to serve as entrypoint:
+
+```bash
+$ kotlin File1Kt
+error: 'main' method not found in class File1Kt
+```
+
+### Packages
+
+The concepts of modules and packages have some interceptions but they have some
+key distinctions. Take this example:
+
+```kotlin
+package project003
+
+fun main () {
+  println("hi from package")
+}
+```
+
+While modules, in most languages, has a 1:1 equivalence with folders in the
+file system, packages does that but tries to stay away from folders because some
+systems [might not have this concept][0161].
+
+Anyway, if your script declares a package and you are not in a mainframe, by
+compiling it the output will be stored in a folder structure representing the
+declared package:
+
+```bash
+$ kotlinc file3.kt
+$ ls project003
+File3Kt.class
+$ kotlin project003.File3Kt
+hi from package
+```
+
+See [project 002][0160] for further details.
 
 ## Control flow
 
 ### If, else, unless, when, while, for and so on
 
 ## Primitive data types: String, Int and so on
-
-## Project: Basic output - Hello world
 
 ## Basic input
 
@@ -119,3 +200,6 @@ hello!
 [0156]: https://kotlinlang.org/docs/command-line.html#sdkman
 [0157]: https://brew.sh/
 [0158]: https://sdkman.io/
+[0159]: ../samples/project-001-hello-world/README.md
+[0160]: ../samples/project-002-files-and-packages/README.md
+[0161]: https://en.wikipedia.org/wiki/Record_Management_Services

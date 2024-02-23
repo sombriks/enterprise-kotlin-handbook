@@ -19,6 +19,14 @@ One would argue that enterprise code is also testable code. Although this is
 highly desirable, it's not a rule easily seen out there. In tis guide we'll
 cover tests because it builds up our trust in the delivered code.
 
+## How to execute the sample projects
+
+Every project folder has a [README.md][0053] with minimal instructions.
+Depending on the project, it can be just a few terminal commands using the
+interpreter or the compiler directly, or detailed instructions on how to spin a
+container or compose IaC file.
+
 [0050]: https://en.wikipedia.org/wiki/Don%27t_repeat_yourself
 [0051]: https://en.wikipedia.org/wiki/Open_source
 [0052]: https://www.apache.org/
+[0053]: project-001-hello-world/README.md

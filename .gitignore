@@ -3,3 +3,8 @@
 *.iml
 out
 gen
+
+# java
+
+*.class
+META-INF
