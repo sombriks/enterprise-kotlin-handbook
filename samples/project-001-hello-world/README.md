@@ -7,7 +7,7 @@
 - java virtual machine 17 or newer properly installed
 - kotlin compiler 1.9 or newer available in the command line
 
-## How to run
+## How to compile and run
 
 ```bash
 kotlinc HelloWorld.kt

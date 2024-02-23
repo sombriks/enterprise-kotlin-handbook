@@ -161,15 +161,114 @@ See [project 002][0160] for further details.
 
 ## Control flow
 
-### If, else, unless, when, while, for and so on
+Things happen from top to bottom, from left to the right unless it's async or
+just a function declaration, then it will happen only when it's called. Then
+again, top to bottom, left to the right.
+
+But mind the unnamed blocks! The following code is **invalid:**
+
+```kotlin
+// flow.kt
+fun main() {
+    val (first, second) = listOf(1,2,3)
+    
+    {
+     println("Hello, world!!! $second")
+    }
+}
+```
+
+Kotlin thinks the block is the [body of a lambda][0162] then bails out with a
+syntax error:
+
+```bash
+Expression is treated as a trailing lambda argument; consider separating it from call with semicolon
+Unresolved reference: second
+```
+
+You do as the output suggests and try to compile again:
+
+```bash
+flow.kt:3:8: warning: variable 'first' is never used
+  val (first, second) = listOf(1,2,3);
+       ^
+flow.kt:5:3: warning: the lambda expression is unused. If you mean a block, you can use 'run { ... }'
+  {
+  ^
+```
+
+### If, when, while, for and so on
+
+Conditionals are pretty straightforward:
+
+```kotlin
+fun isEven(x: Int): Boolean {
+  if(x % 2 == 0) {
+    return true
+  } else {
+    return false
+  }
+}
+```
+
+There are nice syntax sugar:
+
+```kotlin
+fun isEven(x: Int): Boolean {
+  return if(x % 2 == 0) true else false
+}
+```
+
+The switch has other meaning in kotlin so the keyword for it is `when`:
+
+```kotlin
+fun isWorkday(day: String): Boolean {
+  return when(day) {
+    "Saturday", "Sunday" -> false
+    else -> true
+  }
+}
+```
+
+It can yeld values.
+
+While loops are.. wile loops:
+
+```kotlin
+var x = 10
+while(x > 0) {
+  x--
+}
+```
+
+See [the docs][0163] for complete control flow reference.
 
 ## Primitive data types: String, Int and so on
 
+- [Numbers][0164]
+- [Booleans][0165]
+- [Characters][0166]
+- [Strings][0167]
+- [Arrays][0168]
+
 ## Basic input
+
+Now we know kotlin types and how to communicate using prints to console, let's
+ask for user input.
 
 ### Project: Program arguments
 
+One way to get user input is by [passing program arguments][0169]:
+
+```kotlin
+fun main(args: Array<String>) {
+  for(arg in args) println("Received $arg")
+}
+```
+
 ### Project: Environment variables
+
+Another way is to receive [environment variables][0170] from the shell.
 
 ### Project: Interactive prompt
 
@@ -203,3 +302,12 @@ See [project 002][0160] for further details.
 [0159]: ../samples/project-001-hello-world/README.md
 [0160]: ../samples/project-002-files-and-packages/README.md
 [0161]: https://en.wikipedia.org/wiki/Record_Management_Services
+[0162]: https://kotlinlang.org/docs/lambdas.html#instantiating-a-function-type
+[0163]: https://kotlinlang.org/docs/control-flow.html#for-loops
+[0164]: https://kotlinlang.org/docs/numbers.html
+[0165]: https://kotlinlang.org/docs/booleans.html
+[0166]: https://kotlinlang.org/docs/characters.html
+[0167]: https://kotlinlang.org/docs/strings.html
+[0168]: https://kotlinlang.org/docs/arrays.html
+[0169]: ../samples/project-003-guess-number-arg/README.md
+[0170]: https://en.wikipedia.org/wiki/Environment_variable
