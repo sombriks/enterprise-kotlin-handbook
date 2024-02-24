@@ -280,9 +280,14 @@ fun main() {
 Most modern operating systems offers a way to set an environment to the current
 running process so the user can tweak some of its behaviors.
 
-### Project: Interactive prompt
+### Project: Interactive prompt - Check triangles
 
-### Project: Check triangles
+Another way to get user input is via interactive command line prompt.
+
+[This project][0172] samples how to do that.
+
+To read from command line kotlin can either use the [readLine function][0173] or
+use The [java.util.Scanner][0174] class from jdk.
 
 ## Complex data types: List, Map
 
@@ -322,3 +327,6 @@ running process so the user can tweak some of its behaviors.
 [0169]: ../samples/project-003-guess-number-arg/README.md
 [0170]: https://en.wikipedia.org/wiki/Environment_variable
 [0171]: ../samples/project-004-guess-number-env/README.md
+[0172]: ../samples/project-005-guess-number-interactive/README.md
+[0173]: https://kotlinlang.org/api/latest/jvm/stdlib/kotlin.io/read-line.html
+[0174]: https://docs.oracle.com/javase/tutorial/essential/io/scanning.html
