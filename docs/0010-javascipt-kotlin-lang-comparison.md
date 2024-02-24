@@ -72,7 +72,7 @@ We'll discuss classes in details [later][0105].
 | // lists                                         |                                      |
 | val (first, second) = listOf(1,2,3)              | const [first, second] = [1,2,3]      |
 | // maps (works with [classes][0116] too)         |                                      |
-| val (first, second) = listOf("a" to 1, "b" to 2) | const {first, second} = {a: 1, b: 2} |
+| val (first, second) = mapOf("a" to 1, "b" to 2)  | const {first, second} = {a: 1, b: 2} |
 
 ## Communities to talk about the language
 
