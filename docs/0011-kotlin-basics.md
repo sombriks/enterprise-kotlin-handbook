@@ -291,6 +291,10 @@ use The [java.util.Scanner][0174] class from jdk.
 
 ## Complex data types: List, Map
 
+[List][0175] and [Map][0176] are the main container types for daily usage and
+they work as expected: lists are indexed by numbers, starting from zero, maps
+are indexed by text keys or _something else_.
+
 ## Classes
 
 ## Basic I/O: Files
@@ -330,3 +334,5 @@ use The [java.util.Scanner][0174] class from jdk.
 [0172]: ../samples/project-005-guess-number-interactive/README.md
 [0173]: https://kotlinlang.org/api/latest/jvm/stdlib/kotlin.io/read-line.html
 [0174]: https://docs.oracle.com/javase/tutorial/essential/io/scanning.html
+[0175]: https://kotlinlang.org/docs/collections-overview.html#list
+[0176]: https://kotlinlang.org/docs/collections-overview.html#map
