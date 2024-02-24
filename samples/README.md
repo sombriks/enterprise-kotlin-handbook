@@ -1,6 +1,6 @@
 # Samples
 
-Projects to see some concepts discussed on [main documentation](../docs/)
+Projects to see some concepts discussed on [main documentation][0054]
 
 ## What makes any code _enterprise code_ anyway?
 
@@ -26,7 +26,21 @@ Depending on the project, it can be just a few terminal commands using the
 interpreter or the compiler directly, or detailed instructions on how to spin a
 container or compose IaC file.
 
+The README file will often explain:
+
+- dependencies
+- how to build/compile
+- how to execute
+- present a small noteworthy list of interesting trivia
+
+## What is the proper order to study those projects
+
+Go from the first project to the last one, they are numbered to help on that.
+Each project will introduce a new concept which might or might not appear again
+in the next one, but will be useful when building other things.
+
 [0050]: https://en.wikipedia.org/wiki/Don%27t_repeat_yourself
 [0051]: https://en.wikipedia.org/wiki/Open_source
 [0052]: https://www.apache.org/
 [0053]: project-001-hello-world/README.md
+[0054]: ../docs/README.md

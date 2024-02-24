@@ -25,3 +25,5 @@ kotlin project003.File3Kt
 
 - Unlike es6 modules, all symbols inside kotlin scripts are public by default.
 - Packages _usually_ translates to folders. It depends on the operating system.
+
+See [docs](../../docs/0011-kotlin-basics.md) for further details.

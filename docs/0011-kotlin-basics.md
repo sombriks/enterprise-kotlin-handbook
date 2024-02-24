@@ -268,7 +268,17 @@ fun main(args: Array<String>) {
 
 ### Project: Environment variables
 
-Another way is to receive [environment variables][0170] from the shell.
+Another way is to get input is to check [environment variables][0170]
+[from the shell][0171]:
+
+```kotlin
+fun main() {
+  println("current PATH is ${System.getEnv("PATH")}")
+}
+```
+
+Most modern operating systems offers a way to set an environment to the current
+running process so the user can tweak some of its behaviors.
 
 ### Project: Interactive prompt
 
@@ -294,7 +304,7 @@ Another way is to receive [environment variables][0170] from the shell.
 [0151]: https://kotlinlang.org/docs/whatsnew1920.html
 [0152]: https://www.oracle.com/java/technologies/downloads
 [0153]: https://www.azul.com/downloads/?package=jdk#zulu
-[0154]: https://aws.amazon.com/corretto/?filtered-posts.sort-by=item.additionalFields.createdDate&filtered-posts.sort-order=desc
+[0154]: https://aws.amazon.com/corretto
 [0155]: https://docs.fedoraproject.org/en-US/quick-docs/installing-java
 [0156]: https://kotlinlang.org/docs/command-line.html#sdkman
 [0157]: https://brew.sh/
@@ -311,3 +321,4 @@ Another way is to receive [environment variables][0170] from the shell.
 [0168]: https://kotlinlang.org/docs/arrays.html
 [0169]: ../samples/project-003-guess-number-arg/README.md
 [0170]: https://en.wikipedia.org/wiki/Environment_variable
+[0171]: ../samples/project-004-guess-number-env/README.md

@@ -18,3 +18,5 @@ kotlin HelloWorldKt
 
 - Due the java compatibility thing, there always must be a class, so if your
   script only has dangling functions, kotlin compiler creates a class for you.
+
+See [docs](../../docs/0011-kotlin-basics.md) for further details.
