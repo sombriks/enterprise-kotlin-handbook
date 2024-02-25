@@ -6,9 +6,14 @@ gen
 
 # java
 
+*.jar
 *.class
 META-INF
 
 # compiler output
 
 build
+
+# kotlin
+
+*.kotlin_module
