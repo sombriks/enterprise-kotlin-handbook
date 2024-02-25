@@ -8,3 +8,7 @@ gen
 
 *.class
 META-INF
+
+# compiler output
+
+build
