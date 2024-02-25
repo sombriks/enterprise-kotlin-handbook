@@ -7,6 +7,14 @@ There are [exceptions][0150], of course, but that's not the case of kotlin.
 
 Kotlin has [so many features][0151] that one could be easily overwhelmed by it.
 
+## The docs
+
+- The [kotlin manual][0182] should be handy for minor questions on daily work.
+- [Kotlin reference][0151] also helps, but keep in mind that sometimes it tell
+  you to read the java documentation
+- [The playground][0188] helps if you past the phase of use the compiler on
+  command line all the time.
+
 ## Environment setup
 
 We'll start simple, but don't get fooled, we'll get enterprise code soon.
@@ -197,6 +205,35 @@ flow.kt:5:3: warning: the lambda expression is unused. If you mean a block, you 
   ^
 ```
 
+### Variables
+
+There is a few ways to declare variables:
+
+```kotlin
+var x: Int // declaration 
+x = 11 // attribution
+var y = 12 // shorthand with type inference
+```
+
+kotlin is strongly typed, so either you declare with type explicitly or you use
+the shorthand version. Just `var x` is illegal
+
+There is also two kinds of constants: `val` and `const val`
+
+```kotlin
+const val z = 10
+
+fun main() {
+  val x: Int // declaration 
+  x = 11 // attribution
+  val y = 12 // shorthand with type inference
+  // y = 13 // ERROR, illegal
+  println("Our values are $x $y $z")
+}
+```
+
+The difference is `const val` is checked at compile time.
+
 ### If, when, while, for and so on
 
 Conditionals are pretty straightforward:
@@ -295,11 +332,97 @@ use The [java.util.Scanner][0174] class from jdk.
 they work as expected: lists are indexed by numbers, starting from zero, maps
 are indexed by text keys or _something else_.
 
+Usually we'll create lists with the [listOf][0177] helper function and maps with
+the [mapOf][0178] helper function:
+
+```kotlin
+val numbers = listOf(1,2,3)
+// val numbers = ArrayList<Int>()
+// numbers.add(1)
+// numbers.add(2)
+// numbers.add(3)
+val languages = mapOf("script" to "javascript", "compiled" to "java")
+// val languages = HashMap<String,String>()
+// languages.put("script", "javascript")
+// languages.put("compiled", "java")
+```
+
 ## Classes
+
+Kotlin is versatile and can go from [full functional paradigm][0179] to full
+[object-oriented][0180] style. If you know classes from other languages, you can
+expect similar stuff in kotlin; classes, interfaces, constructors, attributes,
+public and private visibility modifiers and so on.
+
+There are a few special idioms that are worthy to mention:
+
+### Smallest possible class declaration
+
+You can declare a class with no attributes and empty constructor like this:
+
+```kotlin
+class Thing
+```
+
+This is useful, as we'll see in next chapters, [trust me][0181].
+
+### The most common way to use constructors
+
+They are kinda inlined with class name declaration:
+
+```kotlin
+class Thing(val attr: Int) // attr is public and immutable because of val
+```
+
+But you can add a second one:
+
+```kotlin
+class Thing(val attr: Int) {
+    constructor(att: Int, something: String) : this(att) {
+        println(something)
+    }
+}
+```
+
+It's possible to make it even more verbose, like java:
+
+```kotlin
+class Thing {
+
+    var attr: Int
+
+    constructor(attr: Int) {
+      this.attr = attr
+    }
+
+    constructor(attr: Int, something: String) {
+        this.attr = attr
+        println(something)
+    }
+}
+```
+
+See more about classes [here][0182].
 
 ## Basic I/O: Files
 
+Input and Output is the very heart of any modern system, side by side with
+processing capabilities.
+
+That part in kotlin is pretty much similar to what we see in other languages:
+
+We can read, we can write, the mode can be either character or binary.
+
+Character mode implies an [encoding][0183]. Class names and other utilities get
+names like [Reader][0184] or [Writer][0185].
+
+Binary mode deals with bytes and we call them streams. Either
+[InputStream][0186] or [OutputStream][0187].
+
 ### Project: Simple Agenda
+
+In [this example][0189] we read a file, transform them in Contacts and perform
+some operations. Then we save back to the disk every time a change happens.
 
 ## Concurrency: threads
 
@@ -310,7 +433,7 @@ are indexed by text keys or _something else_.
 ### Further reading: Coroutines
 
 [0150]: https://go.dev/
-[0151]: https://kotlinlang.org/docs/whatsnew1920.html
+[0151]: https://kotlinlang.org/api/latest/jvm/stdlib/
 [0152]: https://www.oracle.com/java/technologies/downloads
 [0153]: https://www.azul.com/downloads/?package=jdk#zulu
 [0154]: https://aws.amazon.com/corretto
@@ -336,3 +459,16 @@ are indexed by text keys or _something else_.
 [0174]: https://docs.oracle.com/javase/tutorial/essential/io/scanning.html
 [0175]: https://kotlinlang.org/docs/collections-overview.html#list
 [0176]: https://kotlinlang.org/docs/collections-overview.html#map
+[0177]: https://kotlinlang.org/api/latest/jvm/stdlib/kotlin.collections/list-of.html
+[0178]: https://kotlinlang.org/api/latest/jvm/stdlib/kotlin.collections/map-of.html
+[0179]: https://www.youtube.com/watch?v=Ed3t4WAe0Co
+[0180]: https://www.w3schools.com/kotlin/kotlin_oop.php
+[0181]: https://docs.spring.io/spring-framework/reference/core/beans/java/configuration-annotation.html
+[0182]: https://kotlinlang.org/docs/classes.html
+[0183]: https://en.wikipedia.org/wiki/Character_encoding
+[0184]: https://kotlinlang.org/api/latest/jvm/stdlib/kotlin.io/java.io.-reader/
+[0185]: https://kotlinlang.org/api/latest/jvm/stdlib/kotlin.io/java.io.-writer/
+[0186]: https://kotlinlang.org/api/latest/jvm/stdlib/kotlin.io/java.io.-input-stream/
+[0187]: https://kotlinlang.org/api/latest/jvm/stdlib/kotlin.io/java.io.-output-stream/
+[0188]: https://play.kotlinlang.org/
+[0189]: ../samples/project-006-agenda-read-write/README.md
