@@ -310,7 +310,7 @@ Another way is to get input is to check [environment variables][0170]
 
 ```kotlin
 fun main() {
-  println("current PATH is ${System.getEnv("PATH")}")
+  println("current PATH is ${System.getenv("PATH")}")
 }
 ```
 
@@ -336,16 +336,18 @@ Usually we'll create lists with the [listOf][0177] helper function and maps with
 the [mapOf][0178] helper function:
 
 ```kotlin
-val numbers = listOf(1,2,3)
-// val numbers = ArrayList<Int>()
+val numbers = listOf(1,2,3) // immutable
+// val numbers = ArrayList<Int>() // mutable
 // numbers.add(1)
 // numbers.add(2)
 // numbers.add(3)
-val languages = mapOf("script" to "javascript", "compiled" to "java")
-// val languages = HashMap<String,String>()
+val languages = mapOf("script" to "javascript", "compiled" to "java") // immutable
+// val languages = HashMap<String,String>() // mutable
 // languages.put("script", "javascript")
 // languages.put("compiled", "java")
 ```
+
+Please note that kotlin has mutable and immutable versions of lists and maps.
 
 ## Classes
 
@@ -404,9 +406,52 @@ class Thing {
 
 See more about classes [here][0182].
 
+## Inheritance and Interfaces
+
+By default, kotlin classes are [final][0190]. You have to explicitly declare
+them _open_ so you can extend a class:
+
+```kotlin
+open class Base(p: Int)
+
+class Derived(p: Int) : Base(p)
+```
+
+To override methods they must be open to it as well:
+
+```kotlin
+open class Shape {
+    open fun draw() { /*...*/ }
+    fun fill() { /*...*/ }
+}
+
+class Circle() : Shape() {
+    override fun draw() { /*...*/ }
+}
+```
+
+Kotlin [interfaces][0191] can declare methods that classes can override. Like
+java, it's the way to get [polymorphism][0192].
+
+```kotlin
+interface MyInterface {
+    fun bar()
+    fun foo() {
+      // optional body
+    }
+}
+
+class MyClass : MyInterface {
+  override fun bar(){}
+
+}
+```
+
+You need polymorphism to proper implement the ["I" in SOLID][0193].
+
 ## Basic I/O: Files
 
-Input and Output is the very heart of any modern system, side by side with
+Input and Output are the very heart of any modern system, side by side with
 processing capabilities.
 
 That part in kotlin is pretty much similar to what we see in other languages:
@@ -417,7 +462,12 @@ Character mode implies an [encoding][0183]. Class names and other utilities get
 names like [Reader][0184] or [Writer][0185].
 
 Binary mode deals with bytes and we call them streams. Either
-[InputStream][0186] or [OutputStream][0187].
+[InputStream][0186] or [OutputStream][0187], depending if data comes in or out
+of current process.
+
+The most common source and destination for such streams, readers and writers are
+the [files][0194] in the [filesystem][0195], the current and most popular data
+storage abstraction.
 
 ### Project: Simple Agenda
 
@@ -472,3 +522,9 @@ some operations. Then we save back to the disk every time a change happens.
 [0187]: https://kotlinlang.org/api/latest/jvm/stdlib/kotlin.io/java.io.-output-stream/
 [0188]: https://play.kotlinlang.org/
 [0189]: ../samples/project-006-agenda-read-write/README.md
+[0190]: https://kotlinlang.org/docs/inheritance.html
+[0191]: https://kotlinlang.org/docs/interfaces.html
+[0192]: https://en.wikipedia.org/wiki/Polymorphism_(computer_science)
+[0193]: https://en.wikipedia.org/wiki/Interface_segregation_principle
+[0194]: https://en.wikipedia.org/wiki/Computer_file
+[0195]: https://en.wikipedia.org/wiki/File_system
