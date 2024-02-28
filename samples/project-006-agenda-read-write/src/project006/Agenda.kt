@@ -1,18 +1,51 @@
 package project006
 
-class Agenda {
+import java.nio.file.Paths
+import kotlin.io.path.forEachLine
 
-  fun init() {}
+class Agenda(private val contacts: MutableList<Contact> = mutableListOf<Contact>()) {
 
-  fun save() {}
+  fun init() {
+    // exercise: solve the file not found case
+    Paths.get("./contacts.txt").forEachLine(action = { line -> contacts.add(Contact(line)) })
+  }
 
-  fun list() {}
+  fun save() {
+    Paths.get("./contacts.txt")
+        .toFile()
+        .writeText(text = contacts.map { it.toSave() }.joinToString("\n"))
+  }
 
-  fun add() {}
+  fun list() {
+    for (i in 1..contacts.size) println("$i - ${contacts[i-1].toPretty()}")
+  }
 
-  fun update() {}
+  fun add() {
+    println("provide name:")
+    val name = readLine()
+    println("provide number:")
+    val number = readLine()
+    println("provide address:")
+    val address = readLine()
+    contacts.add(Contact("$name;$number;$address"))
+    save()
+  }
 
-  fun delete() {}
+  fun update() {
+    // exercise: validate number against contact list size
+    println("which contact you want to modify?")
+    val number = readLine()!!.toInt()
+    val contact = contacts[number - 1]
+    println("provide name:")
+    contact.name = readLine()!!
+    println("provide number:")
+    contact.number = readLine()!!
+    println("provide address:")
+    contact.address = readLine()!!
+    save()
+  }
+
+  fun delete() {} // exercise: implement delete
 
   fun menu() {
     init()

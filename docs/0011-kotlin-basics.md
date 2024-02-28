@@ -476,9 +476,13 @@ some operations. Then we save back to the disk every time a change happens.
 
 ## Concurrency: threads
 
-### Project: File spreading
+Kotlin has concurrency support built on top of jvm so expect good performance.
 
-### Project: Producer and consumer with mutex lock
+### Project: Producer and Consumer
+
+## Concurrency: thread synchronization
+
+### Project: Banking transactions and mutexes
 
 ### Further reading: Coroutines
 
