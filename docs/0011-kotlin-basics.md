@@ -474,17 +474,30 @@ storage abstraction.
 In [this example][0189] we read a file, transform them in Contacts and perform
 some operations. Then we save back to the disk every time a change happens.
 
-## Concurrency: threads
+## Concurrency: thread, coroutines and more
 
 Kotlin has concurrency support built on top of jvm so expect good performance.
+You can use [java threads][0197]:
+
+```kotlin
+import kotlin.concurrent.thread
+
+fun main() {
+  for(i in 1..10) {
+    thread {
+      println("I am $i")
+    }
+  }
+}
+```
+
+But the concurrency in kotlin really shines with [coroutines][0196]
 
 ### Project: Producer and Consumer
 
 ## Concurrency: thread synchronization
 
 ### Project: Banking transactions and mutexes
-
-### Further reading: Coroutines
 
 [0150]: https://go.dev/
 [0151]: https://kotlinlang.org/api/latest/jvm/stdlib/
@@ -532,3 +545,5 @@ Kotlin has concurrency support built on top of jvm so expect good performance.
 [0193]: https://en.wikipedia.org/wiki/Interface_segregation_principle
 [0194]: https://en.wikipedia.org/wiki/Computer_file
 [0195]: https://en.wikipedia.org/wiki/File_system
+[0196]: https://kotlinlang.org/docs/coroutines-guide.html
+[0197]: https://kotlinlang.org/api/latest/jvm/stdlib/kotlin.concurrent/thread.html#thread
