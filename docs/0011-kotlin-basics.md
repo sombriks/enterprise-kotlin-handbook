@@ -79,6 +79,9 @@ kotlin HelloWorldKt
 hello!
 ```
 
+kotlin needs a [entry point function][0198] called **main** to produce
+executable artifacts, either classes or jar files.
+
 Since kotlin runs on top of jvm:
 
 ```bash
@@ -288,6 +291,13 @@ See [the docs][0163] for complete control flow reference.
 - [Strings][0167]
 - [Arrays][0168]
 
+## Functions (or methods)
+
+- use the `fun` keyword
+- parameters can have [default values][0200]
+- if last argument is a closure you are allowed to use block syntax
+  [outside][0199] the regular argument list
+
 ## Basic input
 
 Now we know kotlin types and how to communicate using prints to console, let's
@@ -474,7 +484,7 @@ storage abstraction.
 In [this example][0189] we read a file, transform them in Contacts and perform
 some operations. Then we save back to the disk every time a change happens.
 
-## Concurrency: thread, coroutines and more
+## Concurrency: thread, coroutines and so on
 
 Kotlin has concurrency support built on top of jvm so expect good performance.
 You can use [java threads][0197]:
@@ -483,7 +493,7 @@ You can use [java threads][0197]:
 import kotlin.concurrent.thread
 
 fun main() {
-  for(i in 1..10) {
+  for(i in 1..100) {
     thread {
       println("I am $i")
     }
@@ -491,13 +501,31 @@ fun main() {
 }
 ```
 
-But the concurrency in kotlin really shines with [coroutines][0196]
+But the concurrency in kotlin really shines with [coroutines][0196]:
 
-### Project: Producer and Consumer
+```kotlin
+// sample-coroutine.kt
+import kotlinx.coroutines.*
 
-## Concurrency: thread synchronization
+fun main() {
+  runBlocking {
+    for(i in 1..100) {
+      launch {
+        println("I am $i")
+      }
+    }
+  }
+}
+```
 
-### Project: Banking transactions and mutexes
+Note: kotlinx samples needs an [extra library][0201], and the command line
+compiler is most buggy. But coroutines samples will run on [playground][0188] in
+jvm mode.
+
+## Next steps
+
+This is the minimum needed to understand the foundations of the language. Now we
+are good to talk about [project setup][0202].
 
 [0150]: https://go.dev/
 [0151]: https://kotlinlang.org/api/latest/jvm/stdlib/
@@ -547,3 +575,8 @@ But the concurrency in kotlin really shines with [coroutines][0196]
 [0195]: https://en.wikipedia.org/wiki/File_system
 [0196]: https://kotlinlang.org/docs/coroutines-guide.html
 [0197]: https://kotlinlang.org/api/latest/jvm/stdlib/kotlin.concurrent/thread.html#thread
+[0198]: https://kotlinlang.org/docs/basic-syntax.html#program-entry-point
+[0199]: https://kotlinlang.org/docs/lambdas.html#higher-order-functions
+[0200]: https://kotlinlang.org/docs/functions.html#named-arguments
+[0201]: https://central.sonatype.com/artifact/org.jetbrains.kotlinx/kotlinx-coroutines-core/versions
+[0202]: ./0012-project-setup-with-maven-and-gradle.md
