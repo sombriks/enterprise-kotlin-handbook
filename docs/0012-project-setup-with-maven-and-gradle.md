@@ -41,9 +41,13 @@ maven and gradle out of the box or via plugin.
 ## Maven setup
 
 In order to manage a project with maven, you need to install the command line
-tool. For mac, use [brew][0317]: **[brew install maven][0314]**
+tool. For mac, use [brew][0317]:
 
-For linux, use [sdkman][0316]: **[sdk install maven][0315]**
+**[brew install maven][0314]**
+
+For linux, use [sdkman][0316]:
+
+**[sdk install maven][0315]**
 
 The you can use the following command to create a maven project:
 
@@ -89,11 +93,123 @@ See the [sample maven project][0323] for further details.
 
 ## Gradle setup
 
+In order to provision gradle projects, you start by installing it.
+
+On linux (using [sdkman][0316]):
+
+```bash
+sdk install gradle
+```
+
+On mac (using [homebrew][0317]):
+
+```bash
+brew install gradle@8
+```
+
+On windows:
+
+_good luck!_
+
+The you can create a project using the following command (it needs at least
+[gradle 8.6][0325] to work properly):
+
+```bash
+mkdir project-008-sample-gradle
+cd project-008-sample-gradle
+echo "no"| gradle init \
+  --type kotlin-application \
+  --dsl kotlin \
+  --test-framework kotlintest \
+  --package project008 \
+  --project-name project-008-sample-gradle \
+  --no-split-project  \
+  --java-version 17
+```
+
+This _extremely hideous_ command will generate to you a [kotlin-ready][0327]
+project managed with gradle.
+
+Unlike the maven version, no need to manual changes in the [config file][0328]
+after project creation except for new dependencies.
+
+The resulting project has a slightly distinct folder structure:
+
+```bash
+project-008-sample-gradle
+├── app
+│   ├── build.gradle.kts
+│   └── src
+│       ├── main
+│       │   ├── kotlin
+│       │   │   └── project008
+│       │   │       └── App.kt
+│       │   └── resources
+│       └── test
+│           ├── kotlin
+│           │   └── project008
+│           │       └── AppTest.kt
+│           └── resources
+├── gradle
+│   ├── libs.versions.toml
+│   └── wrapper
+│       ├── gradle-wrapper.jar
+│       └── gradle-wrapper.properties
+├── gradlew
+├── gradlew.bat
+└── settings.gradle.kts
+```
+
+The equivalent (more or less) of pom.xml in gradle projects is the build.gradle
+(or build.gradle.kts, if you specify --dsl as kotlin instead of groovy) file. It
+has a dependencies section very similar to what maven has, mut uses some exotic
+ways to represent the libraries coordinates.
+
 ## Wrapper scripts
+
+Wrapper scripts allow you to distribute a [reproducible build][0326] by making
+sure not only of the dependencies versions but also the maven or gradle runtime
+versions.
+
+They are useful because the gradle or maven setup on local machine can be tricky
+so it's a welcome way to work with those kind of projects.
+
+In [gradle example][0327] you might already noticed the wrapper script: it's the
+[gradlew][0329] (or `gradlew.bat` if you're on windows) file.
+
+When it does not exists, there is a [gradle task to create the wrapper][0330].
+
+[Maven has its own task as well][0331].
+
+So, when you have  wrapper properly configured, instead of do:
+
+```bash
+gradle build
+```
+
+You do:
+
+```bash
+./gradlew build
+```
+
+Or, with maven:
+
+```bash
+./mvnw clean compile package
+```
 
 ## Popular plugins
 
-## Using java libraries and code from kotlin code
+### Packaging and distribution
+
+### Test and coverage
+
+### Other cool tools
+
+## Multi module projects
+
+## Using java libraries and code from kotlin code and vice versa
 
 [0300]: ./0011-kotlin-basics.md
 [0301]: https://web.stanford.edu/class/archive/cs/cs107/cs107.1174/guide_make.html
@@ -120,3 +236,10 @@ See the [sample maven project][0323] for further details.
 [0322]: https://kotlinlang.org/docs/maven.html
 [0323]: ../samples/project-007-sample-maven/README.md
 [0324]: ../samples/project-007-sample-maven/pom.xml
+[0325]: https://docs.gradle.org/8.6/userguide/build_init_plugin.html#sec:sample_usage
+[0326]: https://en.wikipedia.org/wiki/Reproducible_builds
+[0327]: ../samples/project-008-sample-gradle/README.md
+[0328]: ../samples/project-008-sample-gradle/app/build.gradle.kts
+[0329]: ../samples/project-008-sample-gradle/gradlew
+[0330]: https://docs.gradle.org/current/userguide/gradle_wrapper.html
+[0331]: https://maven.apache.org/wrapper

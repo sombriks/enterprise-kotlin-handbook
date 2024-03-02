@@ -1,12 +1,14 @@
 # A simple kotlin project managed by maven
 
-Small maven project to sample kotlin build, test and so on
+[Small maven project to sample kotlin build, test and so on][projects]
 
 ## Requirements
 
 - java 17 or newer
-- kotlin 1.9 or newer
 - maven 3.9 or newer
+
+It does not care about your kotlin compiler available at command line. Kotlin is
+provisioned as a dependency and plugin for now on.
 
 ## How to build
 
@@ -35,3 +37,5 @@ mvn test
 - We'll discuss tests and coverage later, this project offers just a sample.
 - Nowadays java libraries will tell you the maven coordinates instead of a
   direct download link.
+
+[projects]: ../../docs/0012-project-setup-with-maven-and-gradle.md
