@@ -37,9 +37,14 @@ mvn test
 - We'll discuss tests and coverage later, this project offers just a sample.
 - Nowadays java libraries will tell you the maven coordinates instead of a
   direct download link.
+- Maven projects generated from command line often list an outdated version of
+  [junit][junit4] testing library dependency. it's ofter a good idea to upgrade
+  it to the [newest version][junit5], junit-jupiter  
 
 ## Exercise
 
 Enable maven wrapper on this project
 
 [projects]: ../../docs/0012-project-setup-with-maven-and-gradle.md
+[junit4]: https://github.com/junit-team/junit4/wiki/Getting-started
+[junit5]: https://junit.org/junit5/docs/current/user-guide/#overview-getting-started
