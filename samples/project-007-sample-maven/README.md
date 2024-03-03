@@ -38,4 +38,8 @@ mvn test
 - Nowadays java libraries will tell you the maven coordinates instead of a
   direct download link.
 
+## Exercise
+
+Enable maven wrapper on this project
+
 [projects]: ../../docs/0012-project-setup-with-maven-and-gradle.md

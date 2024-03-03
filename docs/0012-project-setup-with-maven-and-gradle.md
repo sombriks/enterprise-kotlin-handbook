@@ -174,14 +174,14 @@ versions.
 They are useful because the gradle or maven setup on local machine can be tricky
 so it's a welcome way to work with those kind of projects.
 
-In [gradle example][0327] you might already noticed the wrapper script: it's the
+In [gradle example][0327] you might already notice the wrapper script: it's the
 [gradlew][0329] (or `gradlew.bat` if you're on windows) file.
 
-When it does not exists, there is a [gradle task to create the wrapper][0330].
+When it does not exist, there is a [gradle task to create the wrapper][0330].
 
 [Maven has its own task as well][0331].
 
-So, when you have  wrapper properly configured, instead of do:
+So, when you have the wrapper properly configured, instead of do:
 
 ```bash
 gradle build
@@ -201,15 +201,53 @@ Or, with maven:
 
 ## Popular plugins
 
-### Packaging and distribution
+We already saw some of them on those projects, but list them properly with
+links, so it gets easier to check tem out when the time to use them comes:
 
-### Test and coverage
-
-### Other cool tools
+| purpose                            | gradle       | maven        |
+|------------------------------------|--------------|--------------|
+| kotlin support                     | [link][0332] | [link][0322] |
+| repackage with dependencies        | [link][0334] | [link][0333] |
+| ease code execution in development | [link][0335] | [link][0336] |
+| test coverage                      | [link][0337] | [link][0338] |
+| database migrations                | [link][0339] | [link][0340] |
+| spring-boot support                | [link][0341] | [link][0342] |
 
 ## Multi module projects
 
+Using maven or gradle also makes possible to declare not only external
+dependencies but also local modules.
+
+You can read more about this practice [here][0343] for gradle and [here][0344]
+for maven.
+
+One interesting side effect of multi modules projects is that, as long as the
+output of each module remains compatible with the jvm, they can be written in
+any language. it makes possible, for example, to feature java, kotlin, groovy
+and more in one single codebase.
+
 ## Using java libraries and code from kotlin code and vice versa
+
+This benefit can be achieved using multi modules but also in the same project.
+The module itself has distinct source sets for each language, for example
+[this project][0345]. 
+
+## Further reading
+
+This is the minimum to know to handle projects using those tools. 
+
+What? Which one is better?
+
+Hard question.
+
+- Gradle has lots of attention due jetbrains _dedication_ to it.
+- Maven is the first one, who created the coordinate system for dependencies.
+- Gradle eats more memory, spawns a daemon for _faster incremental builds_.
+- Maven is faster for single builds.
+- Gradle is buggier than Maven.
+
+In the end, there is no way to enter enterprise JVM-based development without
+know both, because all projects out there are using that.
 
 [0300]: ./0011-kotlin-basics.md
 [0301]: https://web.stanford.edu/class/archive/cs/cs107/cs107.1174/guide_make.html
@@ -243,3 +281,17 @@ Or, with maven:
 [0329]: ../samples/project-008-sample-gradle/gradlew
 [0330]: https://docs.gradle.org/current/userguide/gradle_wrapper.html
 [0331]: https://maven.apache.org/wrapper
+[0332]: https://kotlinlang.org/docs/gradle-configure-project.html#targeting-the-jvm
+[0333]: https://maven.apache.org/plugins/maven-assembly-plugin/usage.html
+[0334]: https://plugins.gradle.org/plugin/com.github.johnrengelman.shadow
+[0335]: https://docs.gradle.org/current/userguide/application_plugin.html
+[0336]: https://www.mojohaus.org/exec-maven-plugin/usage.html#java-goal
+[0337]: https://docs.gradle.org/current/userguide/jacoco_plugin.html
+[0338]: https://www.eclemma.org/jacoco/trunk/doc/maven.html
+[0339]: https://contribute.liquibase.com/extensions-integrations/directory/integration-docs/gradle/
+[0340]: https://docs.liquibase.com/tools-integrations/maven/home.html
+[0341]: https://docs.spring.io/spring-boot/docs/current/gradle-plugin/reference/htmlsingle/
+[0342]: https://docs.spring.io/spring-boot/docs/current/maven-plugin/reference/htmlsingle/
+[0343]: https://docs.gradle.org/current/userguide/intro_multi_project_builds.html
+[0344]: https://books.sonatype.com/mvnex-book/reference/multimodule-sect-simple-parent.html
+[0345]: https://github.com/sombriks/sample-htmx-javalin/tree/main/src/test

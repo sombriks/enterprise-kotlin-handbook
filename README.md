@@ -31,6 +31,8 @@ subject being presented is ok.
 
 Main docs resides in [docs](docs) folder, samples in [samples](samples) folder.
 
+Start by the [docs](docs) folder.
+
 ## How to contribute
 
 Want to help or just do yourself some exercises? [fork this project][0006]!
