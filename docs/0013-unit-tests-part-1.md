@@ -47,7 +47,32 @@ can write tests inside the `src/test/kotlin` folder.
 
 A test suite is a collection of test cases.
 
-In ~~java~~ kotlin, class methods annotated with @Test is a test case.
+In ~~java~~ kotlin, any class method annotated with [@Test][0404] is considered
+a test case.
+
+The example bellow tests nothing but pass with success:
+
+```kotlin
+package project009
+
+import org.junit.jupiter.api.Assertions
+import org.junit.jupiter.api.Test
+
+class SampleTest1 {
+
+  @Test
+  fun shouldPass() {
+    Assertions.assertTrue(true)
+  }
+}
+```
+
+You always need:
+
+- A class (the test suite grouping the test cases)
+- A function/method annotated with `@Test`
+- At least one assertion. Tests with no assertions passes, but they test nothing
+  at all, so provide at least one assertion for your test cases.
 
 ## Popular Plugins
 
@@ -59,3 +84,4 @@ In ~~java~~ kotlin, class methods annotated with @Test is a test case.
 [0401]: ../samples/project-007-sample-maven/README.md
 [0402]: ../samples/project-008-sample-gradle/README.md
 [0403]: https://junit.org/junit5/docs/current/user-guide/#overview-getting-started
+[0404]: https://junit.org/junit5/docs/current/user-guide/#writing-tests-annotations

@@ -1,0 +1,21 @@
+plugins {
+  id 'application'
+  id "org.jetbrains.kotlin.jvm" version "1.9.22"  
+}
+
+repositories {
+    mavenCentral()
+}
+
+dependencies {
+  testImplementation "org.junit.jupiter:junit-jupiter-engine:5.10.2"
+  testImplementation "org.jetbrains.kotlin:kotlin-test-junit:1.9.22"
+}
+
+application {
+  mainClass = 'project009.MainKt'
+}
+
+tasks.named('test') {
+    useJUnitPlatform() 
+}

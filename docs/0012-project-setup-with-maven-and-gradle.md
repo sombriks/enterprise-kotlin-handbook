@@ -230,11 +230,11 @@ and more in one single codebase.
 
 This benefit can be achieved using multi modules but also in the same project.
 The module itself has distinct source sets for each language, for example
-[this project][0345]. 
+[this project][0345].
 
 ## Further reading
 
-This is the minimum to know to handle projects using those tools. 
+This is the minimum to know to handle projects using those tools.
 
 What? Which one is better?
 
@@ -245,6 +245,8 @@ Hard question.
 - Gradle eats more memory, spawns a daemon for _faster incremental builds_.
 - Maven is faster for single builds.
 - Gradle is buggier than Maven.
+- Maven is harder to extend.
+- Gradle has easier setup for other registries than [maven central][0346].
 
 In the end, there is no way to enter enterprise JVM-based development without
 know both, because all projects out there are using that.
@@ -295,3 +297,4 @@ know both, because all projects out there are using that.
 [0343]: https://docs.gradle.org/current/userguide/intro_multi_project_builds.html
 [0344]: https://books.sonatype.com/mvnex-book/reference/multimodule-sect-simple-parent.html
 [0345]: https://github.com/sombriks/sample-htmx-javalin/tree/main/src/test
+[0346]: https://central.sonatype.com/
