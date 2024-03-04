@@ -1,5 +1,5 @@
 package project009
 
-fun main(args: Array<String>) {
-  println("Hello ${args.size}")
+fun main() {
+  println("Hello ${SimpleCounter().actual()}")
 }
