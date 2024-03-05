@@ -30,9 +30,9 @@ gradle test
 - There is no wrapper, no specified java version, therefore the build becomes
   dependent of the build machine. Fix that as an exercise.
 - The code convention in kotlin is _CamelCase_, following pretty much what java
-  project does. It's not mandatory, as you can see in the _jazz_ on files in
+  convention says. It's not mandatory, as you can see in the _jazz_ on files in
   these example projects. But follow the code conventions, they help you to
-  create unexciting, boring and previsible projects.
+  create unexciting, boring and previsible projects. The _enterprise_ way.
 - Hamcrest and Mockito are pretty common libraries used with junit, so they are
   sampled here. Some functions those libraries have are reserved words in kotlin
   and must be escaped with backticks (`) to work as expected.
