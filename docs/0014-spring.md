@@ -42,8 +42,11 @@ Thanks to it, several chores needed to produce safe, testable and somewhat
 performant code are done automatically and the developer can lay down a couple
 of annotations in the code and the go home early.
 
-Under the hood, Spring container uses [reflection][0512] to scan, instantiate,
-look for dependent code and inject every piece of code in the appropriate way.
+Under the hood, Spring container uses [reflection][0512] to scan the classpath,
+instantiate objects, lookup for dependencies and inject every piece of code in
+the appropriate way.
+
+See [this example project][0513] for better understanding.
 
 ## Difference between spring framework and spring boot
 
@@ -69,3 +72,4 @@ look for dependent code and inject every piece of code in the appropriate way.
 [0510]: https://en.wikipedia.org/wiki/SOLID
 [0511]: https://docs.spring.io/spring-framework/docs/current/javadoc-api/org/springframework/context/annotation/ClassPathBeanDefinitionScanner.html
 [0512]: https://www.oracle.com/technical-resources/articles/java/javareflection.html
+[0513]: ../samples/project-010-spring-example/README.md

@@ -18,3 +18,7 @@ target
 # kotlin
 
 *.kotlin_module
+
+# misc
+
+.DS_Store
