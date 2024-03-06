@@ -1,6 +1,6 @@
 # Spring Boot example
 
-This samples [Spring Boot[spring-boot]] (finally!)
+This samples [Spring Boot][spring-boot] (finally!)
 
 It does nothing but it is ready to!
 
@@ -9,7 +9,7 @@ It does nothing but it is ready to!
 - java 17
 - kotlin 1.9
 - gradle 8.5
-- spring 3.2
+- spring-boot 3.2
 
 ## How to build
 

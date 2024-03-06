@@ -145,7 +145,105 @@ the "S" in SOLID.
 
 ## Notable spring configuration annotations
 
-## Spring profiles and environment variables
+By using stereotype annotations you can proper organize your business code.
+
+This second group helps with non-functional part, like get fine grain of control
+about how those components are supposed to be provisioned.
+
+### @Configuration
+
+[@Configuration][0530] will mark a class to be used as configuration source. The
+annotation itself will do nothing, but once you annotate a class with it you can
+either add other special annotations or methods to provide [@Bean][0531]
+instances.
+
+### @Bean
+
+The [@Bean][0531] annotation on methods help to deliver customized objects as
+spring beans. You can annotate a class with `@Configuration` and then add
+methods annotated with `@Bean` to deliver beans that you intend to add some
+extra sauce before [@Inject][0532] / [@Autowire][0533] them over the entire
+application.
+
+### @Qualifier
+
+Sometimes more than one object will fulfill a dependency in the object graph
+managed by Spring. To avoid ambiguity, you can annotate the
+_injection candidate_ with [@Qualifier][0534].
+
+It involves a proper named `@Bean` declaration most of the time.
+
+We already have a sample of it in the [spring project example][0513]:
+
+```kotlin
+package project010
+
+import org.springframework.beans.factory.annotation.Value
+import org.springframework.context.annotation.Bean
+import org.springframework.context.annotation.Configuration
+import org.springframework.context.annotation.PropertySource
+
+@Configuration
+@PropertySource("classpath:/application.properties")
+class Config {
+
+    @Value("\${hello.spring}")
+    private lateinit var spring: String
+
+    @Bean("special-string")
+    fun greet(): String {
+        return "hello from $spring"
+    }
+}
+```
+
+The `Config` class is annotated with `@Configuration` and has a function
+defining a special `String` as a Spring bean.
+
+But strings are pretty ordinary, therefore Would be a challenge to figure out
+how a managed String would look like.
+
+The solution is the function with `@Bean` and a custom name.
+
+Now you can use this managed String as dependency into other managed beans using
+the [@Qualifier][0534] annotation:
+
+```kotlin
+package project010
+
+import org.springframework.beans.factory.annotation.Qualifier
+import org.springframework.stereotype.Component
+
+@Component
+class Greeter(@Qualifier("special-string") private val greet: String) {
+
+  fun say() = greet
+}
+```
+
+There are plenty of [other interesting configuration annotations][0535], check
+them as an **exercise**.
+
+## Spring profiles, properties and environment variables
+
+Finally, Spring Boot is built on top of [several reasonable defaults][0536].
+
+There is default server port.
+
+There is default datasource configuration.
+
+There is default properties file and profile.
+
+Spring reads the property file and seeks out for [profile-based variants][0537]
+to enhance configuration even further.
+
+And the best part is: any property can be overridden by an environment variable.
+
+Check [this sample project][0538] for details.
+
+## Next steps
+
+In the [next chapter][0539] we'll discuss relational databases.
 
 [0500]: https://spring.io/projects/spring-boot
 [0501]: https://tomcat.apache.org/tomcat-4.1-doc/index.html
@@ -157,7 +255,7 @@ the "S" in SOLID.
 [0508]: https://jakarta.ee/
 [0509]: https://developers.redhat.com/blog/2018/06/28/why-kubernetes-is-the-new-application-server#empowering_your_application
 [0510]: https://en.wikipedia.org/wiki/SOLID
-[0511]: https://docs.spring.io/spring-framework/docs/current/javadoc-api/org/springframework/context/annotation/ClassPathBeanDefinitionScanner.html
+[0511]: https://docs.spring.io/spring-framework/docs/6.1.4/javadoc-api/org/springframework/context/annotation/ClassPathBeanDefinitionScanner.html
 [0512]: https://www.oracle.com/technical-resources/articles/java/javareflection.html
 [0513]: ../samples/project-010-spring-example/README.md
 [0514]: https://docs.spring.io/spring-framework/reference/web/webmvc/mvc-servlet.html
@@ -165,14 +263,24 @@ the "S" in SOLID.
 [0516]: https://spring.io/blog/2014/04/01/spring-boot-1-0-ga-released
 [0517]: https://kubernetes.io/docs/home/
 [0518]: ../samples/project-011-spring-boot-example/README.md
-[0519]: https://docs.spring.io/spring-boot/docs/current/reference/htmlsingle/#using.build-systems.starters
-[0520]: https://docs.spring.io/spring-boot/docs/current/reference/html/web.html
+[0519]: https://docs.spring.io/spring-boot/docs/6.1.4/reference/htmlsingle/#using.build-systems.starters
+[0520]: https://docs.spring.io/spring-boot/docs/6.1.4/reference/html/web.html
 [0521]: https://start.spring.io
 [0522]: https://spring.io/guides/tutorials/rest#_http_is_the_platform
-[0523]: https://docs.spring.io/spring-framework/docs/current/javadoc-api/org/springframework/web/bind/annotation/RestController.html
-[0524]: https://docs.spring.io/spring-framework/docs/current/javadoc-api/org/springframework/stereotype/Controller.html
-[0525]: https://docs.spring.io/spring-framework/docs/current/javadoc-api/org/springframework/stereotype/Service.html
-[0526]: https://docs.spring.io/spring-framework/docs/current/javadoc-api/org/springframework/stereotype/Repository.html
-[0527]: https://docs.spring.io/spring-framework/docs/current/javadoc-api/org/springframework/stereotype/Component.html
+[0523]: https://docs.spring.io/spring-framework/docs/6.1.4/javadoc-api/org/springframework/web/bind/annotation/RestController.html
+[0524]: https://docs.spring.io/spring-framework/docs/6.1.4/javadoc-api/org/springframework/stereotype/Controller.html
+[0525]: https://docs.spring.io/spring-framework/docs/6.1.4/javadoc-api/org/springframework/stereotype/Service.html
+[0526]: https://docs.spring.io/spring-framework/docs/6.1.4/javadoc-api/org/springframework/stereotype/Repository.html
+[0527]: https://docs.spring.io/spring-framework/docs/6.1.4/javadoc-api/org/springframework/stereotype/Component.html
 [0528]: https://en.wikipedia.org/wiki/Model%E2%80%93view%E2%80%93controller
 [0529]: https://en.wikipedia.org/wiki/Single_responsibility_principle
+[0530]: https://docs.spring.io/spring-framework/docs/6.1.4/javadoc-api/org/springframework/context/annotation/Configuration.html
+[0531]: https://docs.spring.io/spring-framework/docs/6.1.4/javadoc-api/org/springframework/context/annotation/Bean.html
+[0532]: https://docs.spring.io/spring-framework/reference/core/beans/standard-annotations.html
+[0533]: https://docs.spring.io/spring-framework/reference/core/beans/annotation-config/autowired.html
+[0534]: https://docs.spring.io/spring-framework/docs/6.1.4/javadoc-api/org/springframework/beans/factory/annotation/Qualifier.html
+[0535]: https://docs.spring.io/spring-framework/docs/6.1.4/javadoc-api/org/springframework/context/annotation/package-summary.html
+[0536]: https://docs.spring.io/spring-boot/docs/current/reference/html/application-properties.html
+[0537]: https://docs.spring.io/spring-boot/docs/3.2.3/reference/html/features.html#features.profiles
+[0538]: ../samples/project-012-spring-boot-web-example/README.md
+[0539]: ./0015-databases.md
