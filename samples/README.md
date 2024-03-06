@@ -28,10 +28,11 @@ container or compose IaC file.
 
 The README file will often explain:
 
-- dependencies
-- how to build/compile
-- how to execute
-- present a small noteworthy list of interesting trivia
+- Dependencies
+- How to build/compile
+- How to execute/test
+- Present a small noteworthy list of interesting trivia
+- Sometimes there are [exercises to perform][0055]
 
 ## What is the proper order to study those projects
 
@@ -39,8 +40,12 @@ Go from the first project to the last one, they are numbered to help on that.
 Each project will introduce a new concept which might or might not appear again
 in the next one, but will be useful when building other things.
 
+When reading the [docs][0054], there will be links to the sample projects, so
+read de guide and it will kick you into the samples time to time.
+
 [0050]: https://en.wikipedia.org/wiki/Don%27t_repeat_yourself
 [0051]: https://en.wikipedia.org/wiki/Open_source
 [0052]: https://www.apache.org/
 [0053]: project-001-hello-world/README.md
 [0054]: ../docs/README.md
+[0055]: ./project-010-spring-example/README.md

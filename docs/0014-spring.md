@@ -50,15 +50,102 @@ See [this example project][0513] for better understanding.
 
 ## Difference between spring framework and spring boot
 
-## Initialize a spring boot project
+While spring is well designed and pays very nice with JEE projects (good old
+days of [spring web app configuration][0514]), it is ultimately limited by it.
+
+In JEE, there is a separation between the application itself and the server
+provisioned to run it.
+
+[Spring Boot][0515] comes to solve this question by making possible to deliver a
+enterprise-grade solution to replace both applications and application servers.
+
+[For the time][0516] it was groundbreaking, no one used to dispute usefulness of
+having an application server managing resources and the application only
+borrowing them.
+
+Nowadays all the thing looks like a distant misdirection. Well,
+[not that distant][0517] but we'll not discuss this now.
+
+Spring Boot is a concrete example of get a complex issue, then solve a simple
+one that delivers the same result and therefore get the complex one solved.
+
+## Understanding a Spring Boot project
+
+Unlike all we did until now, manually create the project isn't the way on Spring
+Boot land. Instead, you go to <https://start.spring.io/> and it renders to you a
+project ready to use. Sure, you still needs to manually add some dependencies on
+pom.xml/build.grade but it's a faster start, skipping several chores.
+
+In order to take advantage of spring-boot goodies, you need to add
+[starters][0519] as dependencies. We'll discuss them in a moment.
+
+You can check a basic spring-boot project produced with the _initializr_
+[here][0518].
 
 ## The `spring-boot-starter-web`
 
+The most common Spring Boot starter is for sure the [web one][0520]. Everyone is
+still doing JSON APIs and this starter eases the job pretty much.
+
+You can select it when using the [initializr][0521] or add it to you spring-boot
+project manually as a dependency.
+
+For gradle:
+
+```kotlin
+implementation('org.springframework.boot:spring-boot-starter-web')
+```
+
+For maven:
+
+```xml
+<dependency>
+ <groupId>org.springframework.boot</groupId>
+ <artifactId>spring-boot-starter-web</artifactId>
+</dependency>
+```
+
+And that's it, next time you run your spring project it will spin up a server on
+port 8080 an you will be able to create [RestControllers][0522] like this one:
+
+```kotlin
+import org.springframework.web.bind.annotation.*
+
+@RestController
+@RequestMapping("/my")
+class MyController {
+
+  @GetMapping
+  fun hello() = "hello world"
+
+}
+```
+
+And that would be accessible via <http://localhost:8080/my> in your browser or
+curl or wget.
+
+As **exercise**, add starter web in previous sample project and then make this
+controller work.
+
 ## Notable spring stereotypes annotations
 
-## Spring profiles and environment variables
+In Spring, there are several ways configure and _wire_ beans. When doing that
+via annotations + classpath scanner, You can use distinct annotations to declare
+distinct roles (or _stereotypes_) for each bean.
+
+When using Spring Boot, these are the holy trinity:
+
+- [@RestController][0523] (used to be just [@Controller][0524])
+- [@Service][0525]
+- [@Repository][0526]
+
+They're all [@Component][0527] descendants but they serve to split mental models
+in the big [MVC layers][0528] idea or the [Single Responsibility][0529] thing,
+the "S" in SOLID.
 
 ## Notable spring configuration annotations
+
+## Spring profiles and environment variables
 
 [0500]: https://spring.io/projects/spring-boot
 [0501]: https://tomcat.apache.org/tomcat-4.1-doc/index.html
@@ -73,3 +160,19 @@ See [this example project][0513] for better understanding.
 [0511]: https://docs.spring.io/spring-framework/docs/current/javadoc-api/org/springframework/context/annotation/ClassPathBeanDefinitionScanner.html
 [0512]: https://www.oracle.com/technical-resources/articles/java/javareflection.html
 [0513]: ../samples/project-010-spring-example/README.md
+[0514]: https://docs.spring.io/spring-framework/reference/web/webmvc/mvc-servlet.html
+[0515]: https://spring.io/projects/spring-boot
+[0516]: https://spring.io/blog/2014/04/01/spring-boot-1-0-ga-released
+[0517]: https://kubernetes.io/docs/home/
+[0518]: ../samples/project-011-spring-boot-example/README.md
+[0519]: https://docs.spring.io/spring-boot/docs/current/reference/htmlsingle/#using.build-systems.starters
+[0520]: https://docs.spring.io/spring-boot/docs/current/reference/html/web.html
+[0521]: https://start.spring.io
+[0522]: https://spring.io/guides/tutorials/rest#_http_is_the_platform
+[0523]: https://docs.spring.io/spring-framework/docs/current/javadoc-api/org/springframework/web/bind/annotation/RestController.html
+[0524]: https://docs.spring.io/spring-framework/docs/current/javadoc-api/org/springframework/stereotype/Controller.html
+[0525]: https://docs.spring.io/spring-framework/docs/current/javadoc-api/org/springframework/stereotype/Service.html
+[0526]: https://docs.spring.io/spring-framework/docs/current/javadoc-api/org/springframework/stereotype/Repository.html
+[0527]: https://docs.spring.io/spring-framework/docs/current/javadoc-api/org/springframework/stereotype/Component.html
+[0528]: https://en.wikipedia.org/wiki/Model%E2%80%93view%E2%80%93controller
+[0529]: https://en.wikipedia.org/wiki/Single_responsibility_principle

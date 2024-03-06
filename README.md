@@ -29,7 +29,8 @@ This is a [monorepo/multiproject][0005], which usually is a bad idea but in this
 case we mainly host documentation, so offer sample projects to better explore a
 subject being presented is ok.
 
-Main docs resides in [docs](docs) folder, samples in [samples](samples) folder.
+Main docs resides in [docs](docs) folder, sample projects in [samples](samples)
+folder. There are a few exercises on each them.
 
 Start by the [docs](docs) folder.
 

@@ -29,8 +29,8 @@ bare-bones spring.
 
 ## Noteworthy
 
-- Conversion of this project into a kotlin project is left as **exercise**
-- The jar assembly plugin configuration is left as **exercise**
+- Conversion of this project into a kotlin project is left as **exercise**.
+- The jar assembly plugin configuration is left as **exercise**.
 - Spring core and context dependencies are the minimum, bare-bones to sample the
   container and dependency injection.
 - Properties is the standard way to inject configurations.
