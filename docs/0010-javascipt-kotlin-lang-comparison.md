@@ -1,7 +1,7 @@
 # Quick Javascript / Kotlin comparison
 
 This part of the guide might be helpful to map noteworthy knowledge from
-javascript to kotlin. Detailed kotlin introduction will be proper hendler in the
+javascript to kotlin. Detailed kotlin introduction will be proper handled in the
 [next section][0105].
 
 ## Online playgrounds
@@ -19,7 +19,7 @@ Kotlin has one, brand new.
 ## Command line interpreters/compilers
 
 Kotlin is general purpose, compiled language. There **is** a compiler and it's
-[installable][0106]  in various ways.
+[installable][0106] through various ways.
 
 For linux, [sdkman][0107] is the best choice, for mac [homebrew][0108].
 
@@ -38,17 +38,17 @@ There will be a more detailed section on it in the [next chapter][0105].
 
 ### Variables
 
-| Kotlin                         | Javascript   |
-|--------------------------------|--------------|
-| // regular variables           |              |
-| var x: Int                     | var x        |
-| var x = 10 // type inference   | let x        |
-| // constants                   |              |
-| val x: Int = 10                | const x = 10 |
-| val x = 10                     |              |
-| // compile-time constants      |              |
-| const x = 10 // checked        |              |
-| const x = something() // error |              |
+| Kotlin                         | Javascript                |
+|--------------------------------|---------------------------|
+| // regular variables           |                           |
+| var x: Int                     | var x                     |
+| var x = 10 // type inference   | let x                     |
+| // constants                   |                           |
+| val x: Int = 10                | const x = 10              |
+| val x = 10                     |                           |
+| // compile-time constants      |                           |
+| const x = 10 // checked        | // there is no such thing |
+| const x = something() // error |                           |
 
 ### Data structures
 
@@ -67,12 +67,13 @@ We'll discuss classes in details [later][0105].
 
 ### Destructuring
 
-| Kotlin                                           | Javascript                           |
-|--------------------------------------------------|--------------------------------------|
-| // lists                                         |                                      |
-| val (first, second) = listOf(1,2,3)              | const [first, second] = [1,2,3]      |
-| // maps (works with [classes][0116] too)         |                                      |
-| val (first, second) = mapOf("a" to 1, "b" to 2)  | const {first, second} = {a: 1, b: 2} |
+| Kotlin                                           | Javascript                               |
+|--------------------------------------------------|------------------------------------------|
+| // lists                                         |                                          |
+| val (first, second) = listOf(1,2,3)              | const [first, second] = [1,2,3]          |
+| // maps (works with [data classes][0116] too)    |                                          |
+| val (first, second) = mapOf("a" to 1, "b" to 2)  | const {a, b} = {a: 1, b: 2}              |
+|                                                  | const {a:first, b:second} = {a: 1, b: 2} |
 
 ## Communities to talk about the language
 
