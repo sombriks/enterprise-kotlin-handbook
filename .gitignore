@@ -22,3 +22,8 @@ target
 # misc
 
 .DS_Store
+!samples/project-013-simple-databases/lib/h2-2.2.224.jar
+!samples/project-013-simple-databases/lib/slf4j-api-2.0.9.jar
+!samples/project-013-simple-databases/lib/slf4j-simple-2.0.9.jar
+!samples/project-013-simple-databases/lib/sqlite-jdbc-3.45.3.0.jar
+todos.*.db

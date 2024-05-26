@@ -27,7 +27,8 @@ provisioned as a dependency and plugin for now on.
 ## How to build
 
 ```bash
-gradle build # or `gradle app:build` # or even `cd app ; gradle build`
+gradle build 
+# or `gradle app:build` # or even `cd app ; gradle build`
 ```
 
 ## How to run
