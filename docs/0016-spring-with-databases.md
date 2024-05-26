@@ -2,8 +2,6 @@
 
 ## Datasource configuration
 
-## JdbcTemplate
-
 ## JPA
 
 ### Entities
@@ -11,6 +9,10 @@
 ### EntityManager
 
 ## Spring data repositories
+
+## JdbcTemplate
+
+## Paging and sorting
 
 ## Database Migrations
 
