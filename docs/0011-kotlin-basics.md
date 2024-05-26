@@ -532,7 +532,7 @@ fun main() {
 ```
 
 Note: kotlinx samples needs an [extra library][0201], and the command line
-compiler is most buggy. But coroutines samples will run on [playground][0188] in
+compiler is buggy. But coroutines samples will run fine on [playground][0188] in
 jvm mode.
 
 ## Next steps
