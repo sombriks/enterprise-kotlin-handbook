@@ -1,6 +1,6 @@
 # The very foundations of enterprise ~~java~~ kotlin projects
 
-In the [previous chapter][0300] we discussed the language and how it`s  very
+In the [previous chapter][0300] we discussed the language and how it`s very
 dependent on the java/jvm ecosystem.
 
 Now we go through the tools to manage more complex projects which make use of
@@ -31,8 +31,8 @@ Several new tools appeared over the time trying to replace maven because
 [xml wasn't sexy anymore][0308] and the most prominent tool on that field is
 [gradle][0309].
 
-All alternative tools still make use of maven registry and it's coordinate
-system of dependencies.
+All [alternative tools][0347] still make use of maven's registry and it's
+coordinate system of dependencies.
 
 IDE support for both tools is prime nowadays, with [intellij][0310],
 [eclipse][0311], [netbeans][0312], [vscode][0313] and others offering support to
@@ -49,7 +49,7 @@ For linux, use [sdkman][0316]:
 
 **[sdk install maven][0315]**
 
-The you can use the following command to create a maven project:
+Then you can use the following command line(s) to create a maven project:
 
 ```bash
 mvn archetype:generate \
@@ -111,7 +111,7 @@ On windows:
 
 _good luck!_
 
-The you can create a project using the following command (it needs at least
+Then you can create a project using the following command (it needs at least
 [gradle 8.6][0325] to work properly):
 
 ```bash
@@ -127,7 +127,7 @@ echo "no"| gradle init \
   --java-version 17
 ```
 
-This _extremely hideous_ command will generate to you a [kotlin-ready][0327]
+This _extremely hideous_ command will generate for you a [kotlin-ready][0327]
 project managed with gradle.
 
 Unlike the maven version, no need to manual changes in the [config file][0328]
@@ -162,17 +162,23 @@ project-008-sample-gradle
 
 The equivalent (more or less) of pom.xml in gradle projects is the build.gradle
 (or build.gradle.kts, if you specify --dsl as kotlin instead of groovy) file. It
-has a dependencies section very similar to what maven has, mut uses some exotic
+has a dependencies section very similar to what maven has, but uses some exotic
 ways to represent the libraries coordinates.
+
+Instead of xml, it uses groovy (or kotlin itself!) language to declare project
+configurations. This is a good thing, technically. Programming languages instead
+of markup languages are supposed to be easier to the programmer eye, therefore
+easier to maintain. Also less brain rewire and context switching when jumping
+from source code and project configuration code.
 
 ## Wrapper scripts
 
-Wrapper scripts allow you to distribute a [reproducible build][0326] by making
-sure not only of the dependencies versions but also the maven or gradle runtime
-versions.
+Wrapper scripts allow you to distribute a [reproducible build][0326] setup by
+making sure not only of the dependencies versions are right but also the maven
+or gradle runtime versions are the same too.
 
 They are useful because the gradle or maven setup on local machine can be tricky
-so it's a welcome way to work with those kind of projects.
+in many ways, so it's a good strategy to work with those kind of scripts.
 
 In [gradle example][0327] you might already notice the wrapper script: it's the
 [gradlew][0329] (or `gradlew.bat` if you're on windows) file.
@@ -202,7 +208,7 @@ Or, with maven:
 ## Popular plugins
 
 We already saw some of them on those projects, but list them properly with
-links, so it gets easier to check tem out when the time to use them comes:
+links, so it gets easier to check them out when the time to use one comes:
 
 | purpose                            | gradle       | maven        |
 |------------------------------------|--------------|--------------|
@@ -298,3 +304,4 @@ know both, because all projects out there are using that.
 [0344]: https://books.sonatype.com/mvnex-book/reference/multimodule-sect-simple-parent.html
 [0345]: https://github.com/sombriks/sample-htmx-javalin/tree/main/src/test
 [0346]: https://central.sonatype.com/
+[0347]: https://rife2.com/bld

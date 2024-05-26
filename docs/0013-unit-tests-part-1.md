@@ -337,7 +337,7 @@ class SampleTest7 {
 }
 ```
 
-Mockito has a [extensive set of examples][0411] showing its possibilities.
+Mockito has a [extensive set of examples][0411] showing off its possibilities.
 
 ## Further reading
 

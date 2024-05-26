@@ -1,7 +1,7 @@
 # [enterprise-kotlin-handbook][0001]
 
-Some exercises to explore out how modern, enterprise grade services can be
-written in kotlin. It's slightly opinionated, proceed at your own risk.
+Some exercises to explore out how modern, enterprise grade **backend services**
+can be written in kotlin. It's slightly opinionated, proceed at your own risk.
 
 ## Motivation
 
