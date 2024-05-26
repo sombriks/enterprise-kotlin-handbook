@@ -21,7 +21,7 @@ We'll start simple, but don't get fooled, we'll get enterprise code soon.
 
 We'll need kotlin compiler available from command line.
 
-To have it, [first we need to install the JDK][0152], any modern version (17 and
+To get it, [first we need to install the JDK][0152], any modern version (17 and
 beyond) will serve. Technically speaking, java 11 would be good too, but it's
 done and gone for good.
 
@@ -47,7 +47,7 @@ javac 17.0.9
 Now we're good to [install the command line compiler][0156]!
 
 As the official docs state, if using mac, [use brew][0157]; if linux
-[use sdkman][0158], if windows, good luck!
+[use sdkman][0158], if windows, _good luck_!
 
 The compiler is called `kotlinc` and the expected terminal output follows:
 
@@ -68,8 +68,8 @@ hello!
 
 ### Project: Basic output - Hello world
 
-Kotlin files ends with the .kt extension and in order to be executable they need
-a main function:
+Kotlin files ends with the .kt extension and in order to be executable they must
+declare a main function:
 
 ```bash
 echo 'fun main () { println("hello!") }' > HelloWorld.kt
@@ -79,7 +79,7 @@ kotlin HelloWorldKt
 hello!
 ```
 
-kotlin needs a [entry point function][0198] called **main** to produce
+kotlin needs the [entry point function][0198] to be called **main** to produce
 executable artifacts, either classes or jar files.
 
 Since kotlin runs on top of jvm:
@@ -141,7 +141,7 @@ error: 'main' method not found in class File1Kt
 
 ### Packages
 
-The concepts of modules and packages have some interceptions but they have some
+The concepts of modules and packages have some similarities but they have some
 key distinctions. Take this example:
 
 ```kotlin
@@ -172,7 +172,7 @@ See [project 002][0160] for further details.
 
 ## Control flow
 
-Things happen from top to bottom, from left to the right unless it's async or
+Things happen from top to bottom, from left to the right, unless it's async or
 just a function declaration, then it will happen only when it's called. Then
 again, top to bottom, left to the right.
 
@@ -221,7 +221,7 @@ var y = 12 // shorthand with type inference
 kotlin is strongly typed, so either you declare with type explicitly or you use
 the shorthand version. Just `var x` is illegal
 
-There is also two kinds of constants: `val` and `const val`
+There is also other two kinds of declarations: `val` and `const val`
 
 ```kotlin
 const val z = 10
@@ -235,7 +235,8 @@ fun main() {
 }
 ```
 
-The difference is `const val` is checked at compile time.
+The difference between `val x` and `const x` is that `const` is checked at
+compile time.
 
 ### If, when, while, for and so on
 
@@ -272,7 +273,7 @@ fun isWorkday(day: String): Boolean {
 
 It can yeld values.
 
-While loops are.. wile loops:
+While loops are... while loops:
 
 ```kotlin
 var x = 10
@@ -295,8 +296,20 @@ See [the docs][0163] for complete control flow reference.
 
 - use the `fun` keyword
 - parameters can have [default values][0200]
-- if last argument is a closure you are allowed to use block syntax
-  [outside][0199] the regular argument list
+- if last argument is a closure, you are allowed to
+  [use block syntax outside][0199] the regular argument list. Weird but you get
+  used to it.
+
+  ```kotlin
+  fun main() {
+    val items = listOf(1, 2, 3).map { it *2 } // closure/lambda
+    println(items) // prints [2, 4, 6]
+
+    // longer format:
+    val more = listOf(7,11,13).map(fun (prime: Int): Int { return prime*prime })
+    println(more) // prints [49, 121, 169]
+  }
+  ```
 
 ## Basic input
 
