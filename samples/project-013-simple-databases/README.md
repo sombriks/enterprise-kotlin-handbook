@@ -30,8 +30,10 @@ Example with sqlite (it has an extra dependency on [sl4j][sl4j]):
 
 ```bash
 java -cp \
-  lib/slf4j-api-2.0.9.jar:lib/slf4j-simple-2.0.9.jar:lib/sqlite-jdbc-3.45.3.0.jar:db-manage.jar \
-  project013.QueryDbKt sqlite list
+lib/slf4j-api-2.0.9.jar:\
+lib/slf4j-simple-2.0.9.jar:\
+lib/sqlite-jdbc-3.45.3.0.jar:\
+db-manage.jar project013.QueryDbKt sqlite list
 ```
 
 ## Noteworthy
