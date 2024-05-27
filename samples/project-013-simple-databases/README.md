@@ -45,6 +45,10 @@ db-manage.jar project013.QueryDbKt sqlite list
 - The JDBC API is quite verbose and fine-grained, which is bad if you just want
   to get things done. This is why so many other database access libraries where
   built. We'll check some of them in other projects.
+- As an **exercise**, improve the command line used to run the application, if
+  possible by unifying it into a single command for both database engines.
+- A second **exercise** is to add a third database driver of your choice and
+  make it work.
 
 [dans]: https://spreadsheetplanet.com/database-vs-spreadsheet/
 [forName]: https://docs.oracle.com/javase/8/docs/api/java/lang/Class.html#forName-java.lang.String-
