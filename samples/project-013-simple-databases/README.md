@@ -23,7 +23,7 @@ kotlinc src/**/*.kt -include-runtime -d db-manage.jar
 You must include the jdbc drivers in the runtime classpath. Example with h2:
 
 ```bash
-java -cp lib/h2-2.2.224.jar:db-manage.jar project013.QueryDbKt h2 list
+java -cp lib/h2-2.2.224.jar:db-manage.jar project013.QueryDbKt h2
 ```
 
 Example with sqlite (it has an extra dependency on [sl4j][sl4j]):
@@ -33,7 +33,7 @@ java -cp \
 lib/slf4j-api-2.0.9.jar:\
 lib/slf4j-simple-2.0.9.jar:\
 lib/sqlite-jdbc-3.45.3.0.jar:\
-db-manage.jar project013.QueryDbKt sqlite list
+db-manage.jar project013.QueryDbKt sqlite
 ```
 
 ## Noteworthy

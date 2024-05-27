@@ -180,14 +180,14 @@ Let's say we want to keep a list of friends. We need their names.
 create table friends(name text);
 ```
 
-This table represents exactly what we requested, although it is quite poorly
+This table represents exactly what we requested, although it is horribly, poorly
 designed.
 
-- If we have wo friends with the same name, we end up with no easy way to
+- If we have two friends with the same name, we end up with no easy way to
   differentiate one from another.
 - I don't know when i inserted that friend in my database.
 - Extra information about the friend (phone, email, address, for example) would
-  be good.
+  be nice to have.
 
 We can recreate our table to fix those problems i just invented:
 
@@ -253,6 +253,41 @@ create table friends
 );
 ```
 
+This is an alternative syntax, the advantage is we _know_ the key name:
+
+```sql
+-- drop table friends;
+create table friends
+(
+    id      integer primary key,
+    name    text      not null,
+    email   text      not null,
+    phone   text      not null,
+    address text      not null,
+    created timestamp not null default current_timestamp,
+    constraint friends_uq_email unique (email),
+    constraint friends_uq_hone unique (phone)
+);
+```
+
+This also works for some dialects (H2 and the rest of the world ok, sqlite no):
+
+```sql
+-- drop table friends;
+create table friends
+(
+    id      integer primary key,
+    name    text      not null,
+    email   text      not null,
+    phone   text      not null,
+    address text      not null,
+    created timestamp not null default current_timestamp
+);
+
+alter table friends add constraint friends_uq_email unique (email);
+alter table friends add constraint friends_uq_hone unique (phone);
+```
+
 On the other hand, sometimes we want just a subset of results, or even there are
 two or more tables we join very often (see what is a join a little further in
 this chapter). For those scenarios we can create views:
@@ -263,11 +298,54 @@ create view friend_emails as select id, email from friends;
 
 Those two concepts will make more sense in the next topics.
 
-#### foreign keys and cascade operations
+#### foreign keys
+
+Let's talk about the "Relational" in Relational Databases.
+
+There are relations between the tables. Let's evolve our friends database, let's
+have one table for friends, another for addresses because yes.
+
+```sql
+drop table friends;
+
+create table addresses
+(
+    id      integer primary key,
+    name    text      not null,
+    number  text,
+    created timestamp not null default current_timestamp,
+    constraint addresses_uq_name_number unique (name, number)
+);
+
+create table friends
+(
+    id           integer primary key,
+    name         text        not null,
+    email        text unique not null,
+    phone        text unique not null,
+    addresses_id integer not null,
+    created      timestamp   not null default current_timestamp,
+    foreign key (addresses_id) references addresses (id)
+);
+```
+
+The way address is defined allow us to share the same address with more than one
+friend; 
+
+But what happens if i delete an address? 
+
+Depending on the database runtime, the delete operation can either be prevented
+or it occurs but let you with a database with invalid state.
+
+Databases honoring the [ACID][0622] properties will prevent you from doing that.
 
 ### DML
 
-#### insert, update, delete
+[DML][0628] stands for Data Manipulation language. It differs from what we're
+seeing because the first one, DDL, explains how our data should look like. This
+one is to feed data into it.
+
+#### insert, update, delete, cascade 
 
 #### select, join, union
 
@@ -303,3 +381,4 @@ Those two concepts will make more sense in the next topics.
 [0625]: https://en.wikipedia.org/wiki/Database_administration
 [0626]: <https://en.wikipedia.org/wiki/Identity_(philosophy)>
 [0627]: https://en.wikipedia.org/wiki/Ship_of_Theseus
+[0628]: https://en.wikipedia.org/wiki/Data_manipulation_language

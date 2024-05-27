@@ -44,7 +44,7 @@ class QueryDb(private val name: String) {
 
             "h2" -> {
                 Class.forName("org.h2.Driver")
-                connection = DriverManager.getConnection("jdbc:h2:./$name.h2.db")
+                connection = DriverManager.getConnection("jdbc:h2:./$name.h2.db", "sa", "sa")
                 initDb("id identity primary key")
             }
 
@@ -84,6 +84,9 @@ class QueryDb(private val name: String) {
             );
         """.trimIndent()
         ).use {
+            // connections, prepared statements and result sets are resources.
+            // https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/use.html#kotlin$use(kotlin.use.T,%20kotlin.Function1((kotlin.use.T,%20kotlin.use.R)))
+            // they must be returned to operating system once we're done
             it.executeUpdate();
         }
     }
