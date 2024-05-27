@@ -9,6 +9,8 @@ Relational databases emerged victorious from alternative ways to store large
 volume of enterprise way back in the 80's,
 [there is a fine documentary about it][0601].
 
+They worth use instead of just shove all the data inside a plain file because
+most of them offer [ACID][0622] properties.
 
 ## Write a program to query data
 
@@ -119,15 +121,147 @@ It has a notable fork, [MariaDB][0616] (which [has the RETURNING][0617]).
 
 ### PostgreSQL, the open-source and enterprise one
 
+Now, this is the one you pick when you want to do big, serious business.
+It's also one of the oldest RDBMS in activity, dating from the time of
+relational database invention.
+
+With postgres you can handle [internet scale][0618] operations, your hardware is
+the limit. It is into another league, competing with systems like Oracle,
+IBM DB2 and SQL Server.
+
+Pick postgres whenever possible.
+
 ## Cool database clients
+
+Most RDBMS offers tools like the sqlite command line tool we used earlier in
+this chapter or something like the H2 [embedded web consoles][0619].
+
+But for most database administration procedures something better can be used.
+
+### dbeaver
+
+[dbeaver][0620] supports a wide range of RDBMS. Everything the jvm touches it
+touches too.
+
+### Intellij Ultimate or DataGrip
+
+[datagrip][0621] supports a wide range of RDBMS. Everything the jvm touches it
+touches too.
 
 ## The SQL language
 
+Now let's talk about the way we interact with databases.
+
+The Structured Query Language is the standard way to retrieve, model, modify and
+evolve data stored into a RDBMS.
+
+Since the language existed for years before the standardization appeared (and
+for decades before that started to be taken seriously), a few
+[SQL Dialects][0624] exists in different RDBMS.
+
+It can be divided in several categories, but the principal ones are DDL and DML.
+
 ### DDL
+
+DDL stands for Data Definition Language. You use it to describe the data schema,
+tables and relations between them. We saw it in action in the
+[initDb function][0623] back in the sample project.
 
 #### create table, alter table, drop table
 
+We talk SQL, we talk tables. 
+
+A table is the foundational structure used to model our data. It holds columns,
+each column represents a characteristic of the data we want stored.
+
+Let's say we want to keep a list of friends. We need their names.
+
+```sql
+create table friends(name text);
+```
+
+This table represents exactly what we requested, although it is quite poorly
+designed.
+
+- If we have wo friends with the same name, we end up with no easy way to
+  differentiate one from another.
+- I don't know when i inserted that friend in my database.
+- Extra information about the friend (phone, email, address, for example) would
+  be good.
+
+We can recreate our table to fix those problems i just invented:
+
+```sql
+-- throw away previous table definition
+drop table friends;
+-- do it again
+create table friends
+(
+    id      integer primary key,
+    name    text      not null,
+    created timestamp not null default current_timestamp
+);
+```
+
+Or, instead of throw it away we just `alter` the table definition:
+
+```sql
+alter table friends add column phone text;
+alter table friends add column email text;
+alter table friends add column address text;
+```
+
+Some database engines (SQLite, for example!) won't let you add primary keys via
+alter table, this is why the example above is how it is.
+
+What?? what is a primary key and why 9 out of 10 [DBA][0625]s call it id?
+
+##### What is a primary key
+
+Whenever you insert data into a table, a record is created. A record is a 'line'
+in the table.
+
+If you insert the same data twice, how to know the difference between records?
+They are the same, yet they're not.
+
+The concept of [identity][0626] helps to solve it. You can read the
+[theseus ship paradox][0627] to get things even more clear: data is subject to
+change over the time, yet each record is supposed to be unique.
+
 #### create index, create view
+
+Indexes are a way to inform the RDBMS that a certain column will be requested by
+queries pretty often.
+
+Primary keys are usually indexed automatically.
+
+You can add uniqueness on your column definition and it will also be indexed.
+
+The table bellow defines unique indexes on email and phone. no friend share such
+information, but it's ok to have more than one friend with the same address.
+
+```sql
+-- drop table friends;
+create table friends
+(
+  id      integer primary key,
+  name    text        not null,
+  email   text unique not null,
+  phone   text unique not null,
+  address text        not null,
+  created timestamp   not null default current_timestamp
+);
+```
+
+On the other hand, sometimes we want just a subset of results, or even there are
+two or more tables we join very often (see what is a join a little further in
+this chapter). For those scenarios we can create views:
+
+```sql
+create view friend_emails as select id, email from friends;
+```
+
+Those two concepts will make more sense in the next topics.
 
 #### foreign keys and cascade operations
 
@@ -159,3 +293,13 @@ It has a notable fork, [MariaDB][0616] (which [has the RETURNING][0617]).
 [0615]: https://learnsql.com/blog/history-of-sql-standards/#sql-2003-and-beyond
 [0616]: https://mariadb.org/
 [0617]: https://mariadb.com/kb/en/insertreturning/
+[0618]: https://www.percona.com/blog/millions-queries-per-second-postgresql-and-mysql-peaceful-battle-at-modern-demanding-workloads/
+[0619]: https://www.h2database.com/html/tutorial.html#tutorial_starting_h2_console
+[0620]: https://dbeaver.io/
+[0621]: https://www.jetbrains.com/datagrip/
+[0622]: https://en.wikipedia.org/wiki/ACID
+[0623]: ../samples/project-013-simple-databases/src/project013/QueryDb.kt
+[0624]: https://en.wikibooks.org/wiki/SQL_Dialects_Reference/Introduction#SQL_implementations_covered_in_this_book
+[0625]: https://en.wikipedia.org/wiki/Database_administration
+[0626]: <https://en.wikipedia.org/wiki/Identity_(philosophy)>
+[0627]: https://en.wikipedia.org/wiki/Ship_of_Theseus
