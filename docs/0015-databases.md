@@ -339,17 +339,221 @@ or it occurs but let you with a database with invalid state.
 
 Databases honoring the [ACID][0622] properties will prevent you from doing that.
 
+But you can solve it explaining what to do in such cases:
+
+```sql
+create table friends
+(
+id           integer primary key,
+name         text        not null,
+email        text unique not null,
+phone        text unique not null,
+addresses_id integer not null,
+created      timestamp   not null default current_timestamp,
+foreign key (addresses_id) references addresses (id) on delete set null
+);
+```
+
+We'll come back to thins in upcoming topics.
+
 ### DML
 
 [DML][0628] stands for Data Manipulation language. It differs from what we're
 seeing because the first one, DDL, explains how our data should look like. This
 one is to feed data into it.
 
-#### insert, update, delete, cascade 
+#### insert
+
+To add data to you database you must use [insert][0629] statements.
+
+For this table (tested on sqlite, _trust me_):
+
+```sql
+-- drop table if exists friends;
+create table friends
+(
+    id      integer primary key,
+    name    text      not null,
+    email   text,
+    created timestamp not null default current_timestamp
+);
+```
+
+You can insert data like this:
+
+```sql
+insert into friends(name) values ('Joe');
+```
+
+The output should be something like this:
+
+```bash
+1 row affected in 5 ms
+```
+
+And you can check your data with a [select][0630] (more on that later):
+
+```sql
+select * from friends;
+```
+
+And the result would be:
+
+|id|name|email|created            |
+|--|----|-----|-------------------|
+|1 |Joe |null |2024-05-28 11:46:18|
+
+Not that insert didn't had any info about `id` or `created`columns, but there is
+values on them. This is how the column definitions work, you can define keys, 
+default values, restrictions, you name it (as long as supported by the database
+engine in use).
+
+For the following table:
+
+```sql
+-- drop table if exists friends;
+create table friends
+(
+    id      integer primary key,
+    name    text      not null,
+    email   text      not null,
+    created timestamp not null default current_timestamp
+);
+```
+
+The same insert that served us well will fail:
+
+```sql
+insert into friends(name) values ('Joe');
+```
+
+With a message error more or less like this:
+
+```console
+[2024-05-28 09:02:09] [19] [SQLITE_CONSTRAINT_NOTNULL] A NOT NULL constraint failed (NOT NULL constraint failed: friends.email)
+```
+
+what does it mean? it means, according to our table definition, that i don't
+accept friends who doesn't have an email.
+
+You fix that insert by simply providing an email:
+
+```sql
+insert into friends(name, email) values ('Joe', 'email@joe.com');
+```
+
+It's possible to provide several friends in a single insert:
+
+```sql
+insert into friends(name, email) 
+values ('Joe', 'email@joe.com'), ('Anne', 'anne@ggg.co');
+```
+
+You can specify values for columns with default values if you want to:
+
+```sql
+insert into friends(name, email, created) values ('Joe', 'email@joe.com', '2024-05-28');
+```
+
+But beware! Primary and unique keys will complain about duplicate values and
+your insert will fail. The psichology id thing, remember?
+
+```sql
+insert into friends(id, name, email)
+values (1, 'Joe', 'email@joe.com'), (1, 'Anne', 'anne@ggg.co');
+```
+
+Expect something like this:
+
+```console
+[2024-05-28 09:13:28] [19] [SQLITE_CONSTRAINT_PRIMARYKEY] A PRIMARY KEY constraint failed (UNIQUE constraint failed: friends.id)
+```
+
+A funny one, if every column has a default value:
+
+```sql
+create table my_messages
+(
+    id      integer primary key,
+    message varchar(255) not null default 'yo!',
+    created timestamp    not null default current_timestamp
+);
+```
+
+You can insert data like this:
+
+```sql
+insert into my_messages default values;
+```
+
+Tables with foreign keys marked as a not null restriction will perform extra
+checks in your insert attempts.
+
+For this [table schema][0631]:
+
+```sql
+create table orders
+(
+    id      integer   not null primary key,
+    created timestamp not null default current_timestamp
+);
+
+create table items
+(
+    id        integer   not null primary key,
+    product   text      not null,
+    amount    integer   not null default 1,
+    orders_id integer   not null references orders (id),
+    created   timestamp not null default current_timestamp
+);
+```
+
+This insert alone will fail (except in sqlite, unless you [enable][0632] the
+foreign key check):
+
+```sql
+-- pragma foreign_keys = 1;
+insert into items (product, orders_id) values ('cell phone', 10);
+```
+
+Resulting error looks like this:
+
+```console
+[2024-05-28 10:00:57] [19] [SQLITE_CONSTRAINT_FOREIGNKEY] A foreign key constraint failed (FOREIGN KEY constraint failed)
+```
+
+Avoid that by inserting an order first:
+
+```sql
+insert into orders default values returning *
+```
+
+The returning part (which MySQL doesn't have but everyone else, even sqlite)
+helps to know the newly created record. Here`s a sample output: 
+
+|id| created             |
+|--|---------------------|
+|1 | 2024-05-28 13:05:48 |
+
+Now the item insert will pass -- as long as the orders_id exists as id in the
+order table:
+
+```sql
+-- pragma foreign_keys = 1;
+insert into items (product, orders_id) values ('bicycle', 1);
+```
+
+#### update, delete, cascade
+
+Similar to the table schema itself, stored data must evolve too.
+
+Either by modifying or removing records.
 
 #### select, join, union
 
-#### order by, limit, offset, group by
+#### order by, limit, offset
+
+#### sum, avg, count, group by
 
 #### window functions
 
@@ -382,3 +586,7 @@ one is to feed data into it.
 [0626]: <https://en.wikipedia.org/wiki/Identity_(philosophy)>
 [0627]: https://en.wikipedia.org/wiki/Ship_of_Theseus
 [0628]: https://en.wikipedia.org/wiki/Data_manipulation_language
+[0629]: https://learnsql.com/blog/sql-insert/
+[0630]: https://learnsql.com/blog/write-select-statement-sql/
+[0631]: https://www.simplilearn.com/tutorials/sql-tutorial/schema-in-sql
+[0632]: https://www.sqlite.org/foreignkeys.html
