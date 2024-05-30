@@ -1073,11 +1073,181 @@ Pretty nice, right?
 ##### CTE - Common Table Expression
 
 Queries can grow more and more complex depending on the kind of information we
-must extract.
+must extract. Joins, subqueries, views, things can grow in complexity pretty
+fast.
 
-#### Order by, limit, offset
+One approach to ease such pain is to identify the duplicity in your subqueries
+and promote them to CTE's.
+
+Let's exemplify the issue and then how to ease things with this database schema:
+
+```sql
+-- pragma foreign_keys = 1;
+
+-- a table for products. key characteristics, hardly changing, goes here. 
+create table products
+(
+    id          integer primary key,
+    description text      not null,
+    created     timestamp not null default current_timestamp
+);
+
+-- a table for history price. prices will vary over time. 
+create table prices_history
+(
+    id          integer primary key,
+    value       decimal(10, 4) not null,
+    created     timestamp      not null default current_timestamp,
+    products_id integer        not null,
+    foreign key (products_id) references products (id),
+    unique (products_id, created)
+);
+
+-- a table to know the product stock position in a given moment in time.
+create table stock_history
+(
+    id          integer primary key,
+    amount      integer   not null default 0,
+    created     timestamp not null default current_timestamp,
+    products_id integer   not null,
+    foreign key (products_id) references products (id),
+    unique (products_id, created)
+);
+
+-- order table to identify a transaction
+create table orders
+(
+    id          integer primary key,
+    -- this should be calculated from all items in this order
+    total_price decimal(10, 4) not null,
+    created     timestamp      not null default current_timestamp
+);
+
+-- order item to know how many products where involved in the transaction, how
+-- much they costed and what was the stock position when this transaction
+-- happened. 
+create table order_items
+(
+    id                integer primary key,
+    amount            integer   not null default 1,
+    created           timestamp not null default current_timestamp,
+    orders_id         integer   not null,
+    products_id       integer   not null,
+    prices_history_id integer   not null,
+    stock_history_id  integer   not null,
+    foreign key (orders_id) references orders (id),
+    foreign key (products_id) references products (id),
+    foreign key (prices_history_id) references prices_history (id),
+    foreign key (stock_history_id) references stock_history (id),
+    -- product appears a single time per transaction, 
+    -- with a stock and a price properly trackable in time
+    unique (orders_id, products_id),
+    unique (orders_id, products_id, prices_history_id),
+    unique (orders_id, products_id, stock_history_id)
+);
+```
+
+I want to sell things and keep track on how exactly it affects my product stock
+and how much it used to cost by the time i sold it. It's not that complex, but
+believe me, sell things is hard.
+
+Let's feed some data:
+
+```sql
+-- pragma foreign_keys = 1;
+-- some base products
+insert into products(id, description)
+values (1, 'Apple'),
+       (2, 'Banana'),
+       (3, 'Milk'),
+       (4, 'Toy Airplane');
+
+-- initial prices
+insert into prices_history (id, products_id, value)
+VALUES (1, 1, 5),
+       (2, 2, 3),
+       (3, 3, 5.5),
+       (4, 4, 25);
+
+-- initial stock
+insert into stock_history (id, products_id, amount)
+values (1, 1, 100),
+       (2, 2, 500),
+       (3, 3, 100),
+       (4, 4, 30);
+
+-- now create an order
+insert into orders(id, total_price)
+values (1, 100);
+
+-- and some items to it
+insert into order_items(orders_id, products_id, prices_history_id, stock_history_id, amount)
+values (1, 1, 1, 1, 10), -- 10 apples at $5 each
+       (1, 4, 4, 4, 2);
+-- 2 toys at $25 each
+
+-- let's update our stocks
+insert into stock_history (id, products_id, amount)
+values (5, 1, 90), -- i just sold 10 apples
+       (6, 4, 28);
+-- just sold 2 airplane toys
+
+-- now let's change some prices just because.
+insert into prices_history (id, products_id, value)
+VALUES (5, 1, 10),
+       (6, 2, 9);
+
+-- and place a new order
+insert into orders(id, total_price)
+values (2, 100);
+
+insert into order_items(orders_id, products_id, prices_history_id, stock_history_id, amount)
+values (2, 1, 5, 5, 20), -- 20 apples at $10 each
+       (2, 2, 6, 2, 100);
+-- 100 bananas at $9 each
+
+-- now update the stock, keep the stock up to date
+insert into stock_history (id, products_id, amount)
+values (7, 1, 70),
+       (8, 2, 400);
+
+-- oof! boy that reminds me my days as a salesman.
+```
+
+Now, let's ask some questions to this database:
+
+1. how many different items i've sold so far?
+1. what was the paid amount in the cheapest order item?
+1. what is my latest stock position for each product?
+1. what is the initial and current price for each product?
+
+The following queries can answer that:
+
+```sql
+-- Answer #1
+select count(distinct products_id) as different_items 
+from order_items;
+
+-- Answer #2
+select min(paid_price) as paid_amount
+from (select amount * value as paid_price
+      from order_items oi
+             join prices_history ph on oi.prices_history_id = ph.id);
+
+-- Answer #3
+select latest.latest_id, latest.products_id, sh.amount
+from (select max(id) as latest_id, products_id
+      from stock_history
+      group by products_id) as latest
+       join stock_history sh on sh.id = latest.latest_id;
+
+-- Answer #4
+
+```
 
 #### Sum, avg, count, group by
+
+#### Order by, limit, offset
 
 #### Window functions
 
