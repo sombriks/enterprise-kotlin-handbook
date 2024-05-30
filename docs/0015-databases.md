@@ -1,18 +1,31 @@
 # Gentle introduction to relational databases
 
 For many years, relational databases where the only serious way to keep relevant
-data saved in a safe and retrievable when needed.
+data saved in a safe and retrievable way, whenever needed.
 
-[Some would say][0600] that it still is the only serious way.
+[Some would say][0600] that it still is the only serious and safe way.
 
 Relational databases emerged victorious from alternative ways to store large
-volume of enterprise way back in the 80's,
+volume of enterprise data way back in the 80's,
 [there is a fine documentary about it][0601].
 
-They worth use instead of just shove all the data inside a plain file because
-most of them offer [ACID][0622] properties.
+They worth to use instead of just shove all the data inside a plain file because
+most of them offer [ACID][0622] properties:
+
+1. Atomic operations
+1. Consistency of data
+1. Isolation in concurrent scenarios
+1. Durability of stored data
+
+We'll look on several relevant details in this chapter, but let's start with the
+sample code: in fact, i will present things first and explain later, deal with
+database management in most enterprise scenario is a more business-related job
+than a purely technical challenge: what really matters is _what_ does this data
+means instead of _how_ to store it.
 
 ## Write a program to query data
+
+This is a small example on _how_ store things.
 
 Kotlin inherits from java a library called [JDBC][0610] and you can use it to
 query the database:
@@ -41,7 +54,7 @@ fun list() {
 ```
 
 JDBC isn't famous for the concise, easy to use API, but it's a good base for the
-people writing alternative query libraries.
+people writing alternative database interfacing libraries.
 
 You can check the complete sample code [here][0611].
 
@@ -65,11 +78,11 @@ serious applications, yet it is easily the most ubiquitous database engine in
 the entire world.
 
 There are [several ways to install][0608] the command line tool and the library,
-but we'll focus on how to handle the database using the command line at first,
-then we'll sample how a simple kotlin program could consume the data.
+but we'll focus on how to handle the database using the command line, since we
+[already sampled][0611] how a kotlin program could consume the data.
 
 Also, we'll make use of [SQL - Structured Query Language][0609] to create the
-sample todo list database, but we'll check it in detail further in this chapter.
+sample todo list database. More about it, in details, further in this chapter.
 
 Open the command line terminal, call the `sqlite3` command you have installed
 from previous step and:
@@ -97,17 +110,23 @@ sqlite> select * from todos;
 sqlite> 
 ```
 
+There is a lot to explain, yet _look how simple is that_!
+
 SQLite figures into this list because it is by far the easiest one to use when
 we need a small and simple database for testing purposes. As you can see you
 don't even need to setup a real project to test things with it.
 
 ### H2
 
-This is another tiny, embeddable database runtime that you can use in your
+This is another tiny, embeddable, database runtime that you can use in your
 kotlin/spring projects.
 
 In fact, [spring boot will provision a h2 embedded instance][0612] if your tests
-needs a [DataSource][0613], but you configured none.
+needs a [DataSource][0613], but you configured no such thing.
+
+Instead of a command line tool, H2 offers a
+[feature-complete web admin console][0637], so you get a better visualization of
+the data
 
 ### MySQL
 
@@ -123,11 +142,11 @@ It has a notable fork, [MariaDB][0616] (which [has the RETURNING][0617]).
 
 Now, this is the one you pick when you want to do big, serious business.
 It's also one of the oldest RDBMS in activity, dating from the time of
-relational database invention.
+relational database invention (i mean WARS!!).
 
 With postgres you can handle [internet scale][0618] operations, your hardware is
 the limit. It is into another league, competing with systems like Oracle,
-IBM DB2 and SQL Server.
+IBM DB2 and SQL Server. And winning.
 
 Pick postgres whenever possible.
 
@@ -136,7 +155,13 @@ Pick postgres whenever possible.
 Most RDBMS offers tools like the sqlite command line tool we used earlier in
 this chapter or something like the H2 [embedded web consoles][0619].
 
-But for most database administration procedures something better can be used.
+But if we keep using only the official tool for each RDBMS, we'll end up
+overwhelmed with so much tooling to learn about something that is a
+[ISO standard][0638].
+
+There are tools able to deal with several distinct database runtimes, so you can
+learn one single tool and get the job done even though you don't understand the
+database in use completely.
 
 ### Dbeaver
 
@@ -153,19 +178,19 @@ touches too.
 [dbbrowser][0633] is a dedicated client for SQLite and it deserves a place here
 because SQLite is the one we pick to do fast, _expendable_ test databases.
 
-Sure, command line is cool but sometimes extra tools allows you to go early to
+Sure, command line is cool but sometimes visual tools allows you to go early to
 home.
 
 ## The SQL language
 
 Now let's talk about the way we interact with databases.
 
-The Structured Query Language is the standard way to retrieve, model, modify and
-evolve data stored into a RDBMS.
+The [Structured Query Language][0639] is the standard way to retrieve, model,
+modify and evolve data stored into a RDBMS.
 
 Since the language existed for years before the standardization appeared (and
-for decades before that started to be taken seriously), a few
-[SQL Dialects][0624] exists in different RDBMS.
+for decades before that standardization started to be taken seriously), a few
+[SQL Dialects][0624] exists in different RDBMS. We'll face them up ahead.
 
 It can be divided in several categories, but the principal ones are DDL and DML.
 
@@ -177,7 +202,7 @@ tables and relations between them. We saw it in action in the
 
 #### Create table, alter table, drop table
 
-We talk SQL, we talk tables.
+We talk SQL, we talk [tables][0640].
 
 A table is the foundational structure used to model our data. It holds columns,
 each column represents a characteristic of the data we want stored.
@@ -238,9 +263,10 @@ in the table.
 If you insert the same data twice, how to know the difference between records?
 They are the same, yet they're not.
 
-The concept of [identity][0626] helps to solve it. You can read the
-[theseus ship paradox][0627] to get things even more clear: data is subject to
-change over the time, yet each record is supposed to be unique.
+The concept of [identity][0626], from psychology, helps to solve it. You can
+read the [theseus ship paradox][0627] to get things even more clear: data is
+subject to change over the time, yet each record is supposed to be equal to
+itself no matter the changes.
 
 ##### 'Natural' vs 'artificial' keys
 
@@ -255,7 +281,32 @@ The `ìd` column is an artificial key. It makes sense in the table context but i
 completely alien to a person in the real world.
 
 In most cases, **prefer artificial keys**. Natural ones are subject to change
-due real world events and thus outside of the RDBMS control.
+due real world events and thus outside the RDBMS control.
+
+If for some reason you want to use special names for your table, use double
+quotes:
+
+##### Double quotes
+
+```sql
+create table "never tell me the odds"
+(
+    id             integer primary key,
+    "odd col name" text not null
+);
+
+insert into "never tell me the odds" ("odd col name")
+values ('han shoots first');
+
+select *
+from "never tell me the odds";
+```
+
+Resulting in:
+
+| id | "odd col name    |
+|----|------------------|
+| 1  | han shoots first |
 
 #### Create index, create view
 
@@ -329,11 +380,11 @@ select id, email
 from friends;
 ```
 
-Those two concepts will make more sense in the next topics.
+Those two concepts will make more sense in the further topics.
 
 #### Foreign keys
 
-Let's talk about the "Relational" in Relational Databases.
+Let's talk about the "Relational" in Relational Database Management System.
 
 There are relations between the tables. Let's evolve our friends database, let's
 have one table for friends, another for addresses because yes.
@@ -363,7 +414,8 @@ create table friends
 ```
 
 The way address is defined allow us to share the same address with more than one
-friend;
+friend. It is represented in the `friends` table by the use of a
+[foreign key][0641] pointing to the `address` primary key.
 
 But what happens if i delete an address?
 
@@ -387,7 +439,7 @@ create table friends
 );
 ```
 
-We'll come back to thins in upcoming topics.
+We'll come back to this cascade thing in upcoming topics.
 
 ### DML
 
@@ -439,7 +491,7 @@ And the result would be:
 | 1  | Joe  | null  | 2024-05-28 11:46:18 |
 
 Not that insert didn't had any info about `id` or `created`columns, but there is
-values on them. This is how the column definitions work, you can define keys,
+values on them. This is how column definitions works, you can define keys,
 default values, restrictions, you name it (as long as supported by the database
 engine in use).
 
@@ -469,8 +521,8 @@ With a message error more or less like this:
 [2024-05-28 09:02:09] [19] [SQLITE_CONSTRAINT_NOTNULL] A NOT NULL constraint failed (NOT NULL constraint failed: friends.email)
 ```
 
-what does it mean? it means, according to our table definition, that i don't
-accept friends who doesn't have an email.
+What does it mean? it means, according to our table definition, that i don't
+accept friends who doesn't have an email. Uncivilized people.
 
 You fix that insert by simply providing an email:
 
@@ -495,7 +547,7 @@ values ('Joe', 'email@joe.com', '2024-05-28');
 ```
 
 But beware! Primary and unique keys will complain about duplicate values and
-your insert will fail. The psichology id thing, remember?
+your insert will fail. The [id thing][0626] from psychology, remember?
 
 ```sql
 insert into friends(id, name, email)
@@ -527,7 +579,7 @@ insert into my_messages default
 values;
 ```
 
-Tables with foreign keys marked as a not null restriction will perform extra
+Tables with foreign keys marked with `not null` restriction will perform extra
 checks in your insert attempts.
 
 For this [table schema][0631]:
@@ -568,18 +620,20 @@ Avoid that by inserting an order first:
 
 ```sql
 insert into orders default
-values returning *
+values
+returning *
 ```
 
-The returning part (which MySQL doesn't have but everyone else, even sqlite)
-helps to know the newly created record. Here`s a sample output:
+The returning part (which MySQL doesn't have but every other database runtime
+does, even sqlite) helps to know how the newly created record looks like. Here's
+a sample output:
 
 | id | created             |
 |----|---------------------|
 | 1  | 2024-05-28 13:05:48 |
 
-Now the item insert will pass -- as long as the orders_id exists as id in the
-order table:
+Now the item insert will pass -- as long as the `orders_id` exists as an `id` in
+the order table:
 
 ```sql
 -- pragma foreign_keys = 1;
@@ -637,7 +691,7 @@ set is_sweet = true
 where description = 'milky ''n honey chocolate';
 ```
 
-But the name is too difficult to use, and what is that '' thing?
+But the name is too difficult to use, and [what is that '' thing][0642]?
 
 You can use an alternative update:
 
@@ -649,7 +703,7 @@ where description like '%honey%';
 
 The [like operator][0635] looks for similarities to a given special string.
 
-But the most safe, straightforward way to update a record is to knowing its id:
+But the most safe, straightforward way to update a record is knowing its id:
 
 ```sql
 update foods
@@ -659,7 +713,7 @@ where id = 6;
 
 We started to use the [where clause][0636] in our queries, more on that up next.
 
-If we need to get rid of some data, the delete can be used:
+If we need to get rid of some data, the `delete` can be used:
 
 ```sql
 delete
@@ -676,15 +730,15 @@ Deletes also take relations into account. Given this schema:
 ```sql
 create table team
 (
-    id identity not null primary key,
-    description text not null
+    id          identity not null primary key,
+    description text     not null
 );
 
 create table member
 (
-    id identity not null primary key,
-    team_id integer not null,
-    name    text    not null,
+    id      identity not null primary key,
+    team_id integer  not null,
+    name    text     not null,
     constraint fk_member_team_id foreign key (team_id) references team (id)
 );
 
@@ -719,8 +773,10 @@ Yes, yes, you can delete all members where team_id = 2 and then perform the
 deletion on team, but you can define a cascade into team_id colum:
 
 ```sql
-alter table member drop constraint fk_member_team_id;
-alter table member add constraint fk_member_team_id foreign key (team_id) references team(id) on delete cascade;
+alter table member
+    drop constraint fk_member_team_id;
+alter table member
+    add constraint fk_member_team_id foreign key (team_id) references team (id) on delete cascade;
 ```
 
 Now your deletion goes even better than expected:
@@ -733,7 +789,9 @@ TODOS.H2.DB.PUBLIC> delete from team where id = 2
 Check what's left in the database:
 
 ```sql
-select * from team join member on member.team_id = team.id;
+select *
+from team
+         join member on member.team_id = team.id;
 ```
 
 | team.id | description | member.id | team_id | name  | 
@@ -742,9 +800,7 @@ select * from team join member on member.team_id = team.id;
 | 1       | team 1      | 2         | 1       | Anna  |
 | 1       | team 1      | 3         | 1       | Lucas |
 
-
-
-#### Select, join, union
+#### Select
 
 We're using selects for a while in this chapter now but let's look at them in
 more detail now.
@@ -766,9 +822,10 @@ No tables. Just a number. Works.
 You can select arbitrary values:
 
 ```sql
-select 'Hi mom', 123, 
-       current_timestamp, 
-       lower('DON''T YELL AT ME!'), 
+select 'Hi mom',
+       123,
+       current_timestamp,
+       lower('DON''T YELL AT ME!'),
        true;
 ```
 
@@ -776,8 +833,247 @@ When selecting you can mix things with data from your table:
 
 ```sql
 select concat('the team member ', name, ' from team ', description) as headline
-from team join member on member.team_id = team.id;
+from team
+         join member on member.team_id = team.id;
 ```
+
+##### Select to insert
+
+It is possible to use the select output as the values to an insert statement. It
+is a powerful move when transforming data already present inside the database.
+
+For example, i want to know all possible color combinations from my color
+database, first i create a table to save my colors, add some, create a second
+table to store my combinations and instead of feed combinations one by one i
+can do the insert into / select operation:
+
+```sql
+-- drop table if exists colors;
+create table colors
+(
+    id   integer primary key,
+    name varchar(255) not null
+);
+
+insert into colors (name)
+values ('red'),
+       ('green'),
+       ('blue'),
+       ('cyan'),
+       ('purple');
+
+-- drop table if exists color_combinations;
+create table color_combinations
+(
+    color1 integer not null,
+    color2 integer not null,
+    constraint color_combinations_fk_colors_id_1 foreign key (color1) references colors (id) on delete cascade,
+    constraint color_combinations_fk_colors_id_2 foreign key (color2) references colors (id) on delete cascade,
+    constraint color_combinations_pk primary key (color1, color2)
+);
+
+-- feed the combinations
+insert into color_combinations
+select c1.id, c2.id
+from colors c1,
+     colors c2
+where c1.id <> c2.id;
+
+select *
+from color_combinations cc
+         join colors c1 on cc.color1 = c1.id
+         join colors c2 on cc.color2 = c2.id
+```
+
+This results into this remarkable dataset:
+
+| color1 | color2 | id | name   | id | name   |
+|:-------|:-------|:---|:-------|:---|:-------|
+| 1      | 2      | 1  | red    | 2  | green  |
+| 1      | 3      | 1  | red    | 3  | blue   |
+| 1      | 4      | 1  | red    | 4  | cyan   |
+| 1      | 5      | 1  | red    | 5  | purple |
+| 2      | 1      | 2  | green  | 1  | red    |
+| 2      | 3      | 2  | green  | 3  | blue   |
+| 2      | 4      | 2  | green  | 4  | cyan   |
+| 2      | 5      | 2  | green  | 5  | purple |
+| 3      | 1      | 3  | blue   | 1  | red    |
+| 3      | 2      | 3  | blue   | 2  | green  |
+| 3      | 4      | 3  | blue   | 4  | cyan   |
+| 3      | 5      | 3  | blue   | 5  | purple |
+| 4      | 1      | 4  | cyan   | 1  | red    |
+| 4      | 2      | 4  | cyan   | 2  | green  |
+| 4      | 3      | 4  | cyan   | 3  | blue   |
+| 4      | 5      | 4  | cyan   | 5  | purple |
+| 5      | 1      | 5  | purple | 1  | red    |
+| 5      | 2      | 5  | purple | 2  | green  |
+| 5      | 3      | 5  | purple | 3  | blue   |
+| 5      | 4      | 5  | purple | 4  | cyan   |
+
+How to make it a [combination instead a permutation][0643] is left to you as an
+exercise.
+
+##### Select to create table
+
+In a similar fashion, you can use a select to create a table:
+
+```sql
+create table ccombs as
+select c1.name as name1, c2.name as name2
+from color_combinations cc
+         join colors c1 on cc.color1 = c1.id
+         join colors c2 on cc.color2 = c2.id
+where c1.id < c2.id
+
+select *
+from ccombs;
+```
+
+| name1 | name2  |
+|-------|--------|
+| red   | green  |
+| red   | blue   |
+| red   | cyan   |
+| red   | purple |
+| green | blue   |
+| green | cyan   |
+| green | purple |
+| blue  | cyan   |
+| blue  | purple |
+| cyan  | purple |
+
+Note however that the resulting table is pretty much poorly designed. it does
+not have any constraints, no primary key, just raw, synthetic data. Sure, you
+can fix some of those issues with `alter table` statements, but the victorious
+approach here is to create the table first and then go with insert/select
+strategy.
+
+##### Join and union
+
+[Join operations][0644] (which we've been using for a while now) combine the
+**records** of two or more tables. Keep that in mind, it involves various tables
+but the operation is at record level. Why is that important?
+
+```sql
+select c1.*, c2.*
+from colors c1,
+     colors c2;
+```
+
+| id | name   | id | name   |
+|:---|:-------|:---|:-------|
+| 1  | red    | 1  | red    |
+| 1  | red    | 2  | green  |
+| 1  | red    | 3  | blue   |
+| 1  | red    | 4  | cyan   |
+| 1  | red    | 5  | purple |
+| 2  | green  | 1  | red    |
+| 2  | green  | 2  | green  |
+| 2  | green  | 3  | blue   |
+| 2  | green  | 4  | cyan   |
+| 2  | green  | 5  | purple |
+| 3  | blue   | 1  | red    |
+| 3  | blue   | 2  | green  |
+| 3  | blue   | 3  | blue   |
+| 3  | blue   | 4  | cyan   |
+| 3  | blue   | 5  | purple |
+| 4  | cyan   | 1  | red    |
+| 4  | cyan   | 2  | green  |
+| 4  | cyan   | 3  | blue   |
+| 4  | cyan   | 4  | cyan   |
+| 4  | cyan   | 5  | purple |
+| 5  | purple | 1  | red    |
+| 5  | purple | 2  | green  |
+| 5  | purple | 3  | blue   |
+| 5  | purple | 4  | cyan   |
+| 5  | purple | 5  | purple |
+
+Each record from the `colors` table [aliased][0645] as `c1` was combined with
+each record from the same table, but aliased as `c2`. This is called a
+[cartesian product][0646] and not always desirable.
+
+As we saw previously, you avoid that by proper define either a where clause or
+conditions in the join. Both join forms bellow solves the issue:
+
+```sql
+select c1.*, c2.*
+from colors c1,
+     colors c2
+where c1.id < c2.id;
+
+select c1.*, c2.*
+from colors c1
+         join colors c2 on c1.id < c2.id;
+```
+
+Joins has [variations][0647]:
+
+- **left join**, when the condition in **joining** table involves null values.
+- **right join**, when the condition in **joined** table involves null values.
+- **(inner) join**, when null values **are not allowed** in the junction. On
+  most RDMS the inner is optional, and the comma-separated syntax is equivalent
+  to it, like the example above.
+- **cross outer join**, when null values **are allowed** in the junction.
+
+Now, if you want to append distinct yet slightly similar resuls you need to do a
+[union][0648]. For example for this schema and data:
+
+```sql
+create table colonels
+(
+    id   integer primary key,
+    name text not null
+);
+create table captains
+(
+    id   integer primary key,
+    name text not null
+);
+create table soldiers
+(
+    id   integer primary key,
+    name text not null
+);
+
+insert into colonels(name)
+values ('Clark'),
+       ('Mark'),
+       ('Oliver');
+insert into captains(name)
+values ('Barry'),
+       ('Larry');
+insert into soldiers(name)
+values ('Joe');
+
+-- i can query each table, one by one, of course, but i can union them and even
+-- polish results a little so no information is left out:
+
+select '1 - colonel' as rank, name
+from colonels
+union
+select '2 - captain' as rank, name
+from captains
+union
+select '3 - soldier' as rank, name
+from soldiers
+order by rank;
+```
+
+| rank        | name   |
+|:------------|:-------|
+| 1 - colonel | Clark  |
+| 1 - colonel | Mark   |
+| 1 - colonel | Oliver |
+| 2 - captain | Barry  |
+| 2 - captain | Larry  |
+| 3 - soldier | Joe    |
+
+Pretty nice, right?
+
+##### CTE - Common Table Expression
+
+Queries can grow more and more complex depending on the kind of information we
+must extract.
 
 #### Order by, limit, offset
 
@@ -858,3 +1154,28 @@ from team join member on member.team_id = team.id;
 [0635]: https://learnsql.com/blog/like-sql-not-like/
 
 [0636]: https://sqldocs.org/sqlite/sqlite-where-clause/
+
+[0637]: https://h2database.com/html/tutorial.html#tutorial_starting_h2_console
+
+[0638]: https://www.iso.org/standard/76583.html
+
+[0639]: https://en.wikibooks.org/wiki/Structured_Query_Language
+
+[0640]: https://www.sqlshack.com/an-introduction-to-sql-tables/
+
+[0641]: https://www.programiz.com/sql/foreign-key
+
+[0642]: https://learnsql.com/cookbook/how-to-escape-single-quotes-in-sql/
+
+[0643]: https://www.mathsisfun.com/combinatorics/combinations-permutations.html
+
+[0644]: https://learnsql.com/blog/sql-join-examples-with-explanations/
+
+[0645]: https://learnsql.com/blog/sql-join-cheat-sheet/joins-cheat-sheet-a4.pdf
+
+[0646]: https://en.wikipedia.org/wiki/Cartesian_product
+
+[0647]: https://learnsql.com/blog/left-join-examples/
+
+[0648]: https://www.sqltutorial.net/union.html
+

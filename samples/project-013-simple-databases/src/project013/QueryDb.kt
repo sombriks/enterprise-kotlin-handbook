@@ -70,7 +70,7 @@ class QueryDb(private val name: String) {
     }
 
     /**
-     * each RDBMS implements a 'dialect', so the SQL can be slightly different
+     * Each RDBMS implements a 'dialect', so the SQL can be slightly different.
      * There is a standard, that should not happen, but it is what it is.
      */
     fun initDb(idDefinition: String) {
@@ -84,9 +84,9 @@ class QueryDb(private val name: String) {
             );
         """.trimIndent()
         ).use {
-            // connections, prepared statements and result sets are resources.
+            // Connections, prepared statements and result sets are resources.
             // https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/use.html#kotlin$use(kotlin.use.T,%20kotlin.Function1((kotlin.use.T,%20kotlin.use.R)))
-            // they must be returned to operating system once we're done
+            // They must be returned to the operating system once we're done.
             it.executeUpdate();
         }
     }
