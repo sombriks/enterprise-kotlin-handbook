@@ -1225,23 +1225,35 @@ The following queries can answer that:
 
 ```sql
 -- Answer #1
-select count(distinct products_id) as different_items 
+select count(distinct products_id) as different_items
 from order_items;
 
 -- Answer #2
 select min(paid_price) as paid_amount
 from (select amount * value as paid_price
       from order_items oi
-             join prices_history ph on oi.prices_history_id = ph.id);
+               join prices_history ph on oi.prices_history_id = ph.id);
 
 -- Answer #3
 select latest.latest_id, latest.products_id, sh.amount
 from (select max(id) as latest_id, products_id
       from stock_history
       group by products_id) as latest
-       join stock_history sh on sh.id = latest.latest_id;
+         join stock_history sh on sh.id = latest.latest_id;
 
 -- Answer #4
+select mm.products_id, phmin.value, phmax.value
+from (select min(ph.id) first_id, max(ph.id) last_id, ph.products_id
+      from prices_history ph
+      group by products_id) mm
+         join prices_history phmin on phmin.id = mm.first_id
+         join prices_history phmax on phmax.id = mm.last_id
+```
+
+But boy that is a lot of queries and subqueries. Subqueries are hard to read.
+We can improve that a little with CTE's:
+
+```sql
 
 ```
 
