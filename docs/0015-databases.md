@@ -1254,7 +1254,43 @@ But boy that is a lot of queries and subqueries. Subqueries are hard to read.
 We can improve that a little with CTE's:
 
 ```sql
+-- Answer #2
+with minimum as (select oi.amount * ph.value as paid_price
+                 from order_items oi
+                          join prices_history ph on oi.prices_history_id = ph.id)
+select min(paid_price) as paid_amount
+from minimum;
+```
 
+Now the subquery is more readable and also reusable.
+
+Let's check another one:
+
+```sql
+-- Answer #3
+with latest_history as (select max(id) as latest_id, products_id
+                        from stock_history
+                        group by products_id),
+     latest_products as (select lh.latest_id, lh.products_id, sh.amount
+                         from latest_history lh
+                                  join stock_history sh on sh.id = lh.latest_id)
+select latest_products.latest_id, latest_products.products_id, latest_products.amount
+from latest_products;
+```
+
+By composing CTE's you can drill down more easily what your query really does.
+Sequencing is better than nesting.
+
+One more:
+
+```sql
+with mm as (select min(ph.id) first_id, max(ph.id) last_id, ph.products_id
+            from prices_history ph
+            group by products_id)
+select mm.products_id, phmin.value, phmax.value
+from mm
+         join prices_history phmin on phmin.id = mm.first_id
+         join prices_history phmax on phmax.id = mm.last_id;
 ```
 
 #### Sum, avg, count, group by
