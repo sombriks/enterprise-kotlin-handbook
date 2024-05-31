@@ -1295,6 +1295,37 @@ from mm
 
 #### Sum, avg, count, group by
 
+We can use [aggregate functions][0649] (like we've been using!) to extract even
+more cool information from our database.
+
+You can figure out total sold items:
+
+```sql
+select sum(amount) from order_items;
+```
+
+The average historic price of a product:
+
+```sql
+select avg(value) from prices_history where products_id = 1;
+```
+
+How many transactions we've done so far:
+
+```sql
+select count(id) from orders;
+```
+
+By [grouping][0650], you can narrow down those information to a specific aspect.
+
+For example, this is how to figure out how many price changes each product had:
+
+```sql
+select count(id) price_changes, products_id
+from prices_history
+group by products_id;
+```
+
 #### Order by, limit, offset
 
 #### Window functions
@@ -1397,3 +1428,6 @@ from mm
 
 [0648]: https://www.sqltutorial.net/union.html
 
+[0649]: https://learn.microsoft.com/en-us/sql/t-sql/functions/aggregate-functions-transact-sql
+
+[0650]: https://learnsql.com/blog/group-by-in-sql-explained/
