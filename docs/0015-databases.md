@@ -621,7 +621,7 @@ Avoid that by inserting an order first:
 ```sql
 insert into orders default
 values
-returning *
+    returning *
 ```
 
 The returning part (which MySQL doesn't have but every other database runtime
@@ -1301,19 +1301,23 @@ more cool information from our database.
 You can figure out total sold items:
 
 ```sql
-select sum(amount) from order_items;
+select sum(amount)
+from order_items;
 ```
 
 The average historic price of a product:
 
 ```sql
-select avg(value) from prices_history where products_id = 1;
+select avg(value)
+from prices_history
+where products_id = 1;
 ```
 
 How many transactions we've done so far:
 
 ```sql
-select count(id) from orders;
+select count(id)
+from orders;
 ```
 
 By [grouping][0650], you can narrow down those information to a specific aspect.
@@ -1326,9 +1330,89 @@ from prices_history
 group by products_id;
 ```
 
+Every column present on select statement and not being aggregated (count, sum,
+avg, etc) must be present in the group by statement.
+
 #### Order by, limit, offset
 
+Order by sorts the results. for example:
+
+```sql
+select *
+from products
+order by description;
+```
+
+Results in:
+
+| id | description  | created             |
+|:---|:-------------|:--------------------|
+| 1  | Apple        | 2024-05-30 20:29:20 |
+| 2  | Banana       | 2024-05-30 20:29:20 |
+| 3  | Milk         | 2024-05-30 20:29:20 |
+| 4  | Toy Airplane | 2024-05-30 20:29:20 |
+
+While:
+
+```sql
+select *
+from products
+order by description desc;
+```
+
+| id | description  | created             |
+|:---|:-------------|:--------------------|
+| 4  | Toy Airplane | 2024-05-30 20:29:20 |
+| 3  | Milk         | 2024-05-30 20:29:20 |
+| 2  | Banana       | 2024-05-30 20:29:20 |
+| 1  | Apple        | 2024-05-30 20:29:20 |
+
+You can get creative with your order clauses:
+
+```sql
+select *
+from products
+order by length(description) desc;
+```
+
+| id | description  | created             |
+|:---|:-------------|:--------------------|
+| 4  | Toy Airplane | 2024-05-30 20:29:20 |
+| 2  | Banana       | 2024-05-30 20:29:20 |
+| 1  | Apple        | 2024-05-30 20:29:20 |
+| 3  | Milk         | 2024-05-30 20:29:20 |
+
+Limit and offset helps to trim down the total results. Very useful when your
+database grows or you don't want to waste bandwidth:
+
+```sql
+select *
+from products
+order by length(description) desc limit 2;
+```
+
+| id | description  | created             |
+|:---|:-------------|:--------------------|
+| 4  | Toy Airplane | 2024-05-30 20:29:20 |
+| 2  | Banana       | 2024-05-30 20:29:20 |
+
+
+```sql
+select *
+from products
+order by length(description) desc limit 2 offset 1;
+```
+
+| id | description  | created             |
+|:---|:-------------|:--------------------|
+| 2  | Banana       | 2024-05-30 20:29:20 |
+| 1  | Apple        | 2024-05-30 20:29:20 |
+
 #### Window functions
+
+At last but not least, let's talk about [window functions][0651].
+
+
 
 [0600]: http://www.sarahmei.com/blog/2013/11/11/why-you-should-never-use-mongodb/
 
@@ -1431,3 +1515,5 @@ group by products_id;
 [0649]: https://learn.microsoft.com/en-us/sql/t-sql/functions/aggregate-functions-transact-sql
 
 [0650]: https://learnsql.com/blog/group-by-in-sql-explained/
+
+[0651]: https://learnsql.com/blog/sql-window-functions-cheat-sheet/
