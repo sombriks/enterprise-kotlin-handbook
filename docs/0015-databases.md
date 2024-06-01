@@ -372,7 +372,7 @@ alter table friends
 
 On the other hand, sometimes we want just a subset of results, or even there are
 two or more tables we join very often (see what is a join a little further in
-this chapter). For those scenarios we can create views:
+this chapter). For those scenarios we can [create views][0652]:
 
 ```sql
 create view friend_emails as
@@ -1073,8 +1073,8 @@ Pretty nice, right?
 ##### CTE - Common Table Expression
 
 Queries can grow more and more complex depending on the kind of information we
-must extract. Joins, subqueries, views, things can grow in complexity pretty
-fast.
+must extract. Joins, subqueries, [views][0652], things can grow in complexity
+pretty fast.
 
 One approach to ease such pain is to identify the duplicity in your subqueries
 and promote them to CTE's.
@@ -1293,6 +1293,12 @@ from mm
          join prices_history phmax on phmax.id = mm.last_id;
 ```
 
+You can think on reusable queries hierarchy like this:
+
+- A local, in-place subquery in the current query for one single use.
+- A CTE for subqueries to better reading or use in more than once scenario.
+- A [view][0652] when the subquery will be reused across many queries.
+
 #### Sum, avg, count, group by
 
 We can use [aggregate functions][0649] (like we've been using!) to extract even
@@ -1408,11 +1414,145 @@ order by length(description) desc limit 2 offset 1;
 | 2  | Banana       | 2024-05-30 20:29:20 |
 | 1  | Apple        | 2024-05-30 20:29:20 |
 
+##### Never paginate without ordenation
+
+I mean, you can do that, but it will give you unstable results. Without the
+`order by` clause, it's up to the database to decide what goes in each offset.
+Not good if you want to recover precise information chunks.
+
+Remember that. keep your data in order.
+
 #### Window functions
 
 At last but not least, let's talk about [window functions][0651].
 
+Regular queries are like unroll a scroll. sometimes it's a very long scroll, so
+you use limit, offset, order by to get just the part you want. **Row by row**
+your data will be presented. Some RDMS systems has a concept called
+[cursor][0654], it's not quite pagination, but serves a similar purpose.
 
+Aggregation queries are like take that scroll and fold it over itself and doing
+over the grouped results the [aggregation operation][0653] you want. You can
+still order, limit, offset the result, but **it's a different dataset now**.
+
+Window functions is what happens when you decide that you need a small piece of
+aggregate data alongside your regular row information.
+
+So let's mix things up and see how does it look like:
+
+```sql
+select id, description, count(id) over ()
+from products;
+```
+
+| id    | description  | "count\(id\) over\(\)" |
+|:------|:-------------|:-----------------------|
+| 1     | Apple        | 4                      |
+| 2     | Banana       | 4                      |
+| 3     | Milk         | 4                      |
+| 4     | Toy Airplane | 4                      |
+
+
+The first two columns are regular ones, from existing rows in the products table
+but the last one is am aggregation result. 
+
+The query tell us the products we have in the data base out of the total
+products created.
+
+What if we want to know the product, its stock position and how does it compare
+with total of all items in stock?
+
+```sql
+with latest_history as (select distinct p.id,
+                                        p.description,
+                                        max(sh.id) over (partition by sh.products_id) sh_id
+                        from products p
+                               join stock_history sh on sh.products_id = p.id)
+select lh.id,
+       lh.description,
+       sh2.amount              product_amount,
+       sum(sh2.amount) over () all_items_stock
+from latest_history lh
+       join stock_history sh2 on sh2.id = lh.sh_id;
+```
+
+| id    | description  | product\_amount | all\_items\_stock |
+|:------|:-------------|:----------------|:------------------|
+| 1     | Apple        | 70              | 598               |
+| 2     | Banana       | 400             | 598               |
+| 3     | Milk         | 100             | 598               |
+| 4     | Toy Airplane | 28              | 598               |
+
+
+Yes, by combining record data and aggregate data in single results you start to
+get better analytical insights.
+
+The form of a windowed colum is:
+
+1. An aggregate function (min, max, sum, avg) or ranking functions (rank,
+   dense_rank row_number).
+1. The window, the `over()` part
+2. Inside the window, [partitioning, ordering, frame definition][0651].
+
+Ranking offers information about who's your top thing.
+
+For example, what if i want to know which product is the most sold?
+
+```sql
+select oi.products_id,
+       oi.orders_id,
+       oi.id                              as order_items_id,
+       p.description,
+       oi.amount,
+       rank() over (order by amount desc) as most_sold
+from products p
+         left join order_items oi on oi.products_id = p.id
+order by most_sold, description
+```
+
+| products\_id | orders\_id | order\_items\_id | description  | amount | most\_sold |
+|:-------------|:-----------|:-----------------|:-------------|:-------|:-----------|
+| 2            | 2          | 4                | Banana       | 100    | 1          |
+| 1            | 2          | 3                | Apple        | 20     | 2          |
+| 1            | 1          | 1                | Apple        | 10     | 3          |
+| 4            | 1          | 2                | Toy Airplane | 2      | 4          |
+| null         | null       | null             | Milk         | null   | 5          |
+
+
+Another important thing to know: **order by with aggregate functions** works
+differently from **regular order by**.
+
+It's a **sliding window**, remember that. Because of that, the following query
+does accumulative sums instead of a total sum for all rows:
+
+```sql
+select oi.id,
+       oi.products_id,
+       sum(oi.amount) over (order by oi.id) as acc_amount
+--        sum(oi.amount) over () as total_amount
+from order_items oi
+order by oi.id
+```
+
+| id | products\_id | acc\_amount |
+|:---|:-------------|:------------|
+| 1  | 1            | 10          |
+| 2  | 4            | 12          |
+| 3  | 1            | 32          |
+| 4  | 2            | 132         |
+
+This is quite useful when [plotting charts][0655].
+
+## Next steps
+
+What a ride, huh?
+
+This as a long chapter, but if you're going enterprise then you're going
+databases and queries.
+
+Check the links, try to model things around you and get good on that. 
+
+In [the next chapter][0656] we get back to our normal kotlin programming.
 
 [0600]: http://www.sarahmei.com/blog/2013/11/11/why-you-should-never-use-mongodb/
 
@@ -1517,3 +1657,13 @@ At last but not least, let's talk about [window functions][0651].
 [0650]: https://learnsql.com/blog/group-by-in-sql-explained/
 
 [0651]: https://learnsql.com/blog/sql-window-functions-cheat-sheet/
+
+[0652]: https://learnsql.com/cookbook/how-to-create-view-in-sql/
+
+[0653]: https://www.sqltutorial.org/sql-aggregate-functions/
+
+[0654]: https://www.postgresql.org/docs/current/plpgsql-cursors.html
+
+[0655]: https://www.statology.org/cumulative-sum-chart-excel/
+
+[0656]: ./0016-spring-with-databases.md
