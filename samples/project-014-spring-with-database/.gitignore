@@ -30,3 +30,7 @@ build/
 
 ### VS Code ###
 .vscode/
+
+## misc ##
+*.mv.db
+*.trace.db
