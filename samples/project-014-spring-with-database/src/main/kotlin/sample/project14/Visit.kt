@@ -9,5 +9,5 @@ data class Visit(
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     var id: Long? = null,
     @Temporal(TemporalType.TIMESTAMP)
-    var created: LocalDateTime? = null,
+    var created: LocalDateTime? = LocalDateTime.now()
 )

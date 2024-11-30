@@ -43,7 +43,7 @@ has tables and views. But in the end they are mostly the same information.
 
 An [Entity][0709] is a class decorated with the @Entity annotation. It means
 that the fields in that class, more or less, map to columns in a table with
-similar name. Here's a sample:
+similar name. Here's a sample from the [sample project][0716]:
 
 ```kotlin
 package sample.project14
@@ -57,7 +57,7 @@ data class Visit(
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     var id: Long? = null,
     @Temporal(TemporalType.TIMESTAMP)
-    var created: LocalDateTime? = null,
+    var created: LocalDateTime? = LocalDateTime.now(),
 )
 ```
 
@@ -97,9 +97,48 @@ No need to know any SQL or its dialects, but a language called [JPQL][0713].
 
 ## Spring data repositories
 
-Then Spring make things even easier with [Repositories][0714].
+Then Spring make things even easier with [Repositories][0714]. With repository,
+common CRUD operations and more are available for free. You just need to extend
+one interface, nothing more:
 
-## Paging and sorting
+```kotlin
+package sample.project14
+
+import org.springframework.data.jpa.repository.JpaRepository
+
+interface VisitRepository : JpaRepository<Visit, Long?>
+```
+
+Then you can save and count (and [more][0715]) like this, zero SQL queries:
+
+```kotlin
+package sample.project14
+
+import jakarta.persistence.EntityManager
+import jakarta.transaction.Transactional
+import org.springframework.web.bind.annotation.GetMapping
+import org.springframework.web.bind.annotation.RequestMapping
+import org.springframework.web.bind.annotation.RestController
+
+@RestController
+@RequestMapping("visit")
+class Controller(
+    val em: EntityManager,
+    val repo: VisitRepository
+) {
+
+  // ...
+
+  @GetMapping
+  @Transactional
+  fun count(): Long {
+      repo.save(Visit())
+      return repo.count()
+  }
+}
+```
+
+## Listing, Paging and sorting
 
 ## Database Migrations
 
@@ -120,3 +159,5 @@ Then Spring make things even easier with [Repositories][0714].
 [0712]: https://jakartaee.github.io/persistence/latest-nightly/api/jakarta.persistence/jakarta/persistence/EntityManager.html
 [0713]: https://jakarta.ee/learn/docs/jakartaee-tutorial/current/persist/persistence-querylanguage/persistence-querylanguage.html#_creating_queries_using_the_jakarta_persistence_query_language
 [0714]: https://spring.io/guides/gs/accessing-data-jpa
+[0715]: https://docs.spring.io/spring-data/jpa/reference/repositories/query-methods-details.html#repositories.query-methods.query-creation
+[0716]: ../samples/project-014-spring-with-database/
