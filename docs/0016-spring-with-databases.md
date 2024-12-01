@@ -138,7 +138,28 @@ class Controller(
 }
 ```
 
-## Listing, Paging and sorting
+## Listing, paging and sorting with repositories
+
+Basic listing can be achieved with **findAll**, it's already there like **save**
+and **count**.
+
+Repositories even has that special feature that let we create new methods in the
+interface with special names and then it understands the desired query. For
+example, **findByCreatedBetween** will take two LocalDateTime arguments and then
+search visits by the created field:
+
+```kotlin
+package sample.project14
+
+import org.springframework.data.jpa.repository.JpaRepository
+import java.time.LocalDateTime
+
+// https://docs.spring.io/spring-data/jpa/reference/repositories/query-keywords-reference.html#appendix.query.method.subject
+interface VisitRepository : JpaRepository<Visit, Long?> {
+
+    fun findByCreatedBetween(createdAfter: LocalDateTime, createdBefore: LocalDateTime): List<Visit>
+}
+```
 
 ## Database Migrations
 

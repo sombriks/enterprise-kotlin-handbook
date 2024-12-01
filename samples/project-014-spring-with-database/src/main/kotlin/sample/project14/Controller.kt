@@ -5,16 +5,17 @@ import jakarta.transaction.Transactional
 import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.bind.annotation.RestController
+import java.time.LocalDateTime
 
 @RestController
 @RequestMapping("visit")
 class Controller(
     val em: EntityManager,
-    val repo: VisitRepository
+    val repo: VisitRepository,
 ) {
 
-    @GetMapping("count")
-    fun visit(): List<Visit> = em.createQuery("select v from Visit v", Visit::class.java).resultList
+    @GetMapping("em-list-all")
+    fun emListAll(): List<Visit> = em.createQuery("select v from Visit v", Visit::class.java).resultList
 
     @Transactional
     @GetMapping
@@ -22,4 +23,14 @@ class Controller(
         repo.save(Visit())
         return repo.count()
     }
+
+    // some repository usage examples
+
+    @GetMapping("repo-list-all")
+    fun repoListAll(): List<Visit> = repo.findAll()
+
+    @GetMapping("repo-list-by-created")
+    fun repoListByCreated(start: LocalDateTime, end: LocalDateTime): List<Visit> =
+        repo.findByCreatedBetween(start, end)
+
 }

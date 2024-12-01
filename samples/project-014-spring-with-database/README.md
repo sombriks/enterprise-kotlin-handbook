@@ -40,3 +40,11 @@ java -jar target/project-014-0.0.1-SNAPSHOT.jar
 The application persists the number of site visits at
 <http://localhost:8080/visit>. The number of total visits must survive
 application restarts as long as the database isn't deleted.
+
+All saved visits can be seen at <http://localhost:8080/visit/em-list-all>.
+
+Sample on search at.
+
+Sample on paging with Slice at.
+
+Sample on paging with Page at.
