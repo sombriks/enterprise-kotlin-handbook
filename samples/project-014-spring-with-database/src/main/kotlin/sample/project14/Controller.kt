@@ -2,6 +2,9 @@ package sample.project14
 
 import jakarta.persistence.EntityManager
 import jakarta.transaction.Transactional
+import org.springframework.data.domain.Page
+import org.springframework.data.domain.PageRequest
+import org.springframework.data.domain.Sort
 import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.bind.annotation.RestController
@@ -33,4 +36,11 @@ class Controller(
     fun repoListByCreated(start: LocalDateTime, end: LocalDateTime): List<Visit> =
         repo.findByCreatedBetween(start, end)
 
+    @GetMapping("repo-list-paged")
+    fun repoListPaged(page: Int, size: Int): Page<Visit> = repo.listPaged(
+        PageRequest.of(
+            page, size,
+            Sort.Direction.DESC, "id"
+        )
+    )
 }

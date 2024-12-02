@@ -161,6 +161,38 @@ interface VisitRepository : JpaRepository<Visit, Long?> {
 }
 ```
 
+Another feature very important elegantly provided by repositories is the
+[pagination][0717]. Again, all you need to use is a special method signature,
+receiving a [Pageable][0718] and returning either a List or a [Page][0719]:
+
+```kotlin
+package sample.project14
+
+import org.springframework.data.domain.Page
+import org.springframework.data.domain.PageRequest
+import org.springframework.data.domain.Sort
+
+// ...
+
+@RestController
+@RequestMapping("visit")
+class Controller(
+    val em: EntityManager,
+    val repo: VisitRepository,
+) {
+
+  // ...
+
+  @GetMapping("repo-list-paged")
+  fun repoListPaged(page: Int, size: Int): Page<Visit> = repo.listPaged(
+      PageRequest.of(
+          page, size,
+          Sort.Direction.DESC, "id"
+      )
+  )
+}
+```
+
 ## Database Migrations
 
 ### Liquibase
@@ -182,3 +214,6 @@ interface VisitRepository : JpaRepository<Visit, Long?> {
 [0714]: https://spring.io/guides/gs/accessing-data-jpa
 [0715]: https://docs.spring.io/spring-data/jpa/reference/repositories/query-methods-details.html#repositories.query-methods.query-creation
 [0716]: ../samples/project-014-spring-with-database/
+[0717]: https://www.baeldung.com/spring-data-jpa-pagination-sorting
+[0718]: https://docs.spring.io/spring-data/commons/docs/current/api/org/springframework/data/domain/Pageable.html
+[0719]: https://docs.spring.io/spring-data/commons/docs/current/api/org/springframework/data/domain/Page.html
