@@ -63,7 +63,7 @@ data class Visit(
 
 This entity expects a table called *visit* containing two columns: *id* and
 *created*. It also expects the database handles [primary key generation][0710]
-and the type of created column to be a timestamp. Besides that, there is a lot
+and the type of *created* column to be a timestamp. Besides that, there is a lot
 that JPA hides by default so we don't need to think about proper queries all the
 time.
 
@@ -135,13 +135,15 @@ class Controller(
       repo.save(Visit())
       return repo.count()
   }
+
+  // ...
 }
 ```
 
 ## Listing, paging and sorting with repositories
 
 Basic listing can be achieved with **findAll**, it's already there like **save**
-and **count**.
+and **count**. Needless to say to not use **findAll** on huge tables.
 
 Repositories even has that special feature that let we create new methods in the
 interface with special names and then it understands the desired query. For
@@ -161,7 +163,7 @@ interface VisitRepository : JpaRepository<Visit, Long?> {
 ```
 
 Another feature very important elegantly provided by repositories is the
-[pagination][0717]. Again, all you need to use is a special method signature,
+[pagination][0717]. Again, all we need to use is a special method signature,
 receiving a [Pageable][0718] and returning either a List or a [Page][0719]:
 
 ```kotlin
@@ -202,29 +204,86 @@ Finally, let's talk about migrations.
 Any actively used system is constantly evolving and so the infrastructure behind
 it. That means changes in our code, our database, our user interfaces and so on.
 
-Changes in the database had a history of be too hard to track, but the
-migrations pattern defines a good way to both track the changes and set a source
-of truth to them.
+Changes in the database had a history of be hard to track, but the migrations
+pattern defines a good way to both track the changes and set a
+[source of truth][0720] to them.
 
 ### Liquibase
 
+There are several migrate systems out there, [liquibase][0721] is one of the
+best and it happens to be supported by spring boot out of the box. All you have
+to do is to add [liquibase-core][0722] as dependency and to make sure a
+liquibase **root** [changelog][0723] is present either in the default location
+or at the configured path in your application.properties:
+
+```properties
+spring.application.name=project-014-spring-with-database
+spring.datasource.url=jdbc:h2:./visits
+spring.datasource.username=enterprise
+#spring.liquibase.change-log=classpath:/db/changelog/db.changelog-master.yaml
+spring.liquibase.change-log=classpath:/changelog-master.yml
+
+```
+
+By this configuration, we need to create a file called **changelog-master.yml**
+and place it in the same folder (resources probably) the
+**application.properties** file:
+
+```yaml
+databaseChangeLog:
+  - includeAll:
+      path: migrations
+      relativeToChangelogFile: true
+```
+
+And this file expects a folder called *migrations*. There we place our migrate
+files in any expected [migrate format supported by liquibase][0724]:
+
+```sql
+-- liquibase formatted sql
+-- changeset sombriks:2024-12-03-create-table-visit.sql
+
+create table visit(
+    id identity primary key,
+    created timestamp
+);
+```
+
+A migrate/changelog file can contain one or more changesets. For each changeset,
+it may or may not contain a [rollback][0725].
+
+Now all our database changes can be put in migrations and tracked along changes
+in the codebase.
+
+That's it, spring/kotlin applications are ready for serious business. Remember
+to check the [sample project for this chapter][0701].
+
+Next we will discuss [more tests][0726].
+
 [0700]: ./0015-databases.md
 [0701]: ../samples/project-013-simple-databases
-[0702]: https://docs.oracle.com/javase/tutorial/jdbc/TOC.html
-[0703]: https://docs.oracle.com/javase/tutorial/jdbc/basics/sqldatasources.html
-[0704]: https://tomcat.apache.org/tomcat-11.0-doc/jndi-resources-howto.html
-[0705]: https://jdbi.org/
-[0706]: https://jakarta.ee/learn/docs/jakartaee-tutorial/current/persist/persistence-intro/persistence-intro.html
-[0707]: https://docs.spring.io/spring-boot/appendix/application-properties/index.html#appendix.application-properties.data
-[0708]: https://learnsql.com/blog/what-sql-dialect-to-learn/
-[0709]: https://spring.io/guides/gs/accessing-data-jpa
-[0710]: https://learnsql.com/blog/what-is-a-primary-key/
-[0711]: https://blog.codinghorror.com/object-relational-mapping-is-the-vietnam-of-computer-science/
-[0712]: https://jakartaee.github.io/persistence/latest-nightly/api/jakarta.persistence/jakarta/persistence/EntityManager.html
-[0713]: https://jakarta.ee/learn/docs/jakartaee-tutorial/current/persist/persistence-querylanguage/persistence-querylanguage.html#_creating_queries_using_the_jakarta_persistence_query_language
-[0714]: https://spring.io/guides/gs/accessing-data-jpa
-[0715]: https://docs.spring.io/spring-data/jpa/reference/repositories/query-methods-details.html#repositories.query-methods.query-creation
+[0702]: <https://docs.oracle.com/javase/tutorial/jdbc/TOC.html>
+[0703]: <https://docs.oracle.com/javase/tutorial/jdbc/basics/sqldatasources.html>
+[0704]: <https://tomcat.apache.org/tomcat-11.0-doc/jndi-resources-howto.html>
+[0705]: <https://jdbi.org/>
+[0706]: <https://jakarta.ee/learn/docs/jakartaee-tutorial/current/persist/persistence-intro/persistence-intro.html>
+[0707]: <https://docs.spring.io/spring-boot/appendix/application-properties/index.html#appendix.application-properties.data>
+[0708]: <https://learnsql.com/blog/what-sql-dialect-to-learn/>
+[0709]: <https://spring.io/guides/gs/accessing-data-jpa>
+[0710]: <https://learnsql.com/blog/what-is-a-primary-key/>
+[0711]: <https://blog.codinghorror.com/object-relational-mapping-is-the-vietnam-of-computer-science/>
+[0712]: <https://jakartaee.github.io/persistence/latest-nightly/api/jakarta.persistence/jakarta/persistence/EntityManager.html>
+[0713]: <https://jakarta.ee/learn/docs/jakartaee-tutorial/current/persist/persistence-querylanguage/persistence-querylanguage.html#_creating_queries_using_the_jakarta_persistence_query_language>
+[0714]: <https://spring.io/guides/gs/accessing-data-jpa>
+[0715]: <https://docs.spring.io/spring-data/jpa/reference/repositories/query-methods-details.html#repositories.query-methods.query-creation>
 [0716]: ../samples/project-014-spring-with-database/
-[0717]: https://www.baeldung.com/spring-data-jpa-pagination-sorting
-[0718]: https://docs.spring.io/spring-data/commons/docs/current/api/org/springframework/data/domain/Pageable.html
-[0719]: https://docs.spring.io/spring-data/commons/docs/current/api/org/springframework/data/domain/Page.html
+[0717]: <https://www.baeldung.com/spring-data-jpa-pagination-sorting>
+[0718]: <https://docs.spring.io/spring-data/commons/docs/current/api/org/springframework/data/domain/Pageable.html>
+[0719]: <https://docs.spring.io/spring-data/commons/docs/current/api/org/springframework/data/domain/Page.html>
+[0720]: <https://en.wikipedia.org/wiki/Single_source_of_truth>
+[0721]: <https://www.liquibase.com/>
+[0722]: <https://central.sonatype.com/artifact/org.liquibase/liquibase-core>
+[0723]: <https://docs.liquibase.com/concepts/changelogs/home.html>
+[0724]: https://docs.liquibase.com/concepts/changelogs/sql-format.html
+[0725]: https://docs.liquibase.com/workflows/liquibase-community/automatic-custom-rollbacks.html
+[0726]: ./0017-unit-tests-part-2.md
