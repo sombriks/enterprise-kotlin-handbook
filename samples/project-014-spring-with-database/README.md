@@ -43,8 +43,6 @@ application restarts as long as the database isn't deleted.
 
 All saved visits can be seen at <http://localhost:8080/visit/em-list-all>.
 
-Sample on search at.
+Sample on search at <http://localhost:8080/visit/repo-list-by-created?start=2024-01-01T00:00:00Z&end=2030-12-31T23:59:59Z>.
 
-Sample on paging with Slice at.
-
-Sample on paging with Page at.
+Sample on paging and sorting at <http://localhost:8080/visit/repo-list-paged>.

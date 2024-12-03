@@ -5,8 +5,10 @@ import jakarta.transaction.Transactional
 import org.springframework.data.domain.Page
 import org.springframework.data.domain.PageRequest
 import org.springframework.data.domain.Sort
+import org.springframework.format.annotation.DateTimeFormat
 import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.RequestMapping
+import org.springframework.web.bind.annotation.RequestParam
 import org.springframework.web.bind.annotation.RestController
 import java.time.LocalDateTime
 
@@ -33,11 +35,17 @@ class Controller(
     fun repoListAll(): List<Visit> = repo.findAll()
 
     @GetMapping("repo-list-by-created")
-    fun repoListByCreated(start: LocalDateTime, end: LocalDateTime): List<Visit> =
+    fun repoListByCreated(
+        @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) start: LocalDateTime,
+        @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) end: LocalDateTime,
+    ): List<Visit> =
         repo.findByCreatedBetween(start, end)
 
     @GetMapping("repo-list-paged")
-    fun repoListPaged(page: Int, size: Int): Page<Visit> = repo.listPaged(
+    fun repoListPaged(
+        @RequestParam(defaultValue = "0") page: Int,
+        @RequestParam(defaultValue = "10") size: Int,
+    ): Page<Visit> = repo.listPaged(
         PageRequest.of(
             page, size,
             Sort.Direction.DESC, "id"

@@ -154,7 +154,6 @@ package sample.project14
 import org.springframework.data.jpa.repository.JpaRepository
 import java.time.LocalDateTime
 
-// https://docs.spring.io/spring-data/jpa/reference/repositories/query-keywords-reference.html#appendix.query.method.subject
 interface VisitRepository : JpaRepository<Visit, Long?> {
 
     fun findByCreatedBetween(createdAfter: LocalDateTime, createdBefore: LocalDateTime): List<Visit>
@@ -181,19 +180,31 @@ class Controller(
     val repo: VisitRepository,
 ) {
 
-  // ...
+    // ...
 
-  @GetMapping("repo-list-paged")
-  fun repoListPaged(page: Int, size: Int): Page<Visit> = repo.listPaged(
-      PageRequest.of(
-          page, size,
-          Sort.Direction.DESC, "id"
-      )
-  )
+    @GetMapping("repo-list-paged")
+    fun repoListPaged(
+        @RequestParam(defaultValue = "0") page: Int,
+        @RequestParam(defaultValue = "10") size: Int,
+    ): Page<Visit> = repo.listPaged(
+        PageRequest.of(
+            page, size,
+            Sort.Direction.DESC, "id"
+        )
+    )
 }
 ```
 
 ## Database Migrations
+
+Finally, let's talk about migrations.
+
+Any actively used system is constantly evolving and so the infrastructure behind
+it. That means changes in our code, our database, our user interfaces and so on.
+
+Changes in the database had a history of be too hard to track, but the
+migrations pattern defines a good way to both track the changes and set a source
+of truth to them.
 
 ### Liquibase
 
