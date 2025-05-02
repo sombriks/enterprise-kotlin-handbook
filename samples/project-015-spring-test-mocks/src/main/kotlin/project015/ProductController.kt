@@ -6,6 +6,7 @@ import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.PathVariable
 import org.springframework.web.bind.annotation.PostMapping
 import org.springframework.web.bind.annotation.PutMapping
+import org.springframework.web.bind.annotation.RequestBody
 import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.bind.annotation.RestController
 
@@ -18,9 +19,9 @@ class ProductController(private val service: ProductService) {
     @GetMapping("/{id}")
     fun find(@PathVariable id: Long): Product? = service.find(id)
     @PostMapping
-    fun insert(product: Product): Product = service.save(product)
+    fun insert(@RequestBody product: Product): Product = service.save(product)
     @PutMapping("/{id}")
-    fun uprate(@PathVariable id: Long, product: Product): Product {
+    fun uprate(@PathVariable id: Long, @RequestBody product: Product): Product {
         if (id != product.id)
             throw BadRequestException("Product id mismatch")
         return service.save(product)

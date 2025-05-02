@@ -82,6 +82,11 @@ And that's it, the project is
 ./mvnw test
 ```
 
+## Noteworthy
+
+- avoid the `org.junit.Test` annotation, use the new one at 
+  `org.junit.jupiter.api.Test`
+
 [initializr]: https://start.spring.io/#!type=maven-project&language=kotlin&platformVersion=3.4.5&packaging=jar&jvmVersion=21&groupId=project015&artifactId=project015&name=project015&description=Demo%20project%20for%20Spring%20Boot&packageName=project015&dependencies=devtools,web,data-jpa,liquibase,testcontainers,postgresql
 [liquibase-changelog]: ./src/main/resources/db/changelog/db.changelog-master.yaml
 [migtration]: ./src/main/resources/db/changelog/migrations/2025-05-01-initial-schema.sql
