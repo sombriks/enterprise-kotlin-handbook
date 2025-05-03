@@ -1,7 +1,11 @@
 # Unit Tests, Mock scenarios and Integration tests
 
+Following our [previous chapter][0805], let's discuss how to properly test more
+complex applications.
+
 A key aspect of enterprise code is its testability and spring offers great
-support for this.
+support for this. Tests covering great chunks of layers in the application can
+be called [integration tests][0806].
 
 All goodies seen in [previous chapter about testing][0801] are also available,
 along with cool new ones.
@@ -89,7 +93,7 @@ class ProductControllerTest {
 
 ## TestContainers
 
-Finally, `TestContainers` can help by extending the test boundaries to the
+Finally, [TestContainers][0802] can help by extending the test boundaries to the
 database.
 
 If the project uses liquibase or depends on a certain kind of state in the db,
@@ -131,4 +135,13 @@ class Project015ApplicationTests {
 }
 ```
 
+Check the [sample project][0803] to see it in action and then head to the
+[next chapter][0804]
+
 [0801]: ./0013-unit-tests-part-1.md
+[0802]: https://testcontainers.com
+[0803]: ../samples/project-015-spring-test-mocks/README.md
+[0804]: ./0018-container-basics.md
+[0805]: ./0016-spring-with-databases.md
+[0806]: https://en.wikipedia.org/wiki/Integration_testing
+
