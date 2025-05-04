@@ -90,10 +90,41 @@ docker build -t my-enterprise-app .
 The `-t` parameter **tags** the image and the `.` is the [build context][0911]
 (i.e. rom where files needed to the image will be copied).
 
+Then you can run the created image:
+
+```bash
+docker run --rm my-enterprise-app
+```
+
 Try it in [this sample project][0912] to see it in action.
 
 ### Use multi-stage builds
 
+Container images doesn't need to provide a complete development environment.
+Instead, a minimal runtime is recommended to optimize resources consumption and
+provide better overall performance.
+
+One way to achieve it is using [multi-stage builds][0913]:
+
+```dockerfile
+FROM gradle:jdk21 as builder
+ADD src /app/src/
+ADD build.gradle.kts settings.gradle.kts /app/
+WORKDIR /app
+RUN gradle build
+
+FROM eclipse-temurin:21-jre-alpine
+COPY --from=builder /app/build/libs/project-011-spring-boot-example-0.0.1-SNAPSHOT.jar /app/boot.jar
+WORKDIR /app
+ENTRYPOINT java -jar boot.jar
+```
+
+That way the resulting container image will be much smaller.
+
 ### Make it configurable with environment variables
+
+Another key aspect to take in consideration is how to configure the application
+at runtime. Makes little sense, for example, build a new image whenever database
+credentials change.
 
 ## Publish image on docker hub or github registry or something else (ECR)
