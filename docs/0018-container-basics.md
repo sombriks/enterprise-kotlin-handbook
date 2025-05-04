@@ -107,7 +107,7 @@ provide better overall performance.
 One way to achieve it is using [multi-stage builds][0913]:
 
 ```dockerfile
-FROM gradle:jdk21 as builder
+FROM gradle:jdk21 AS builder
 ADD src /app/src/
 ADD build.gradle.kts settings.gradle.kts /app/
 WORKDIR /app
@@ -127,4 +127,51 @@ Another key aspect to take in consideration is how to configure the application
 at runtime. Makes little sense, for example, build a new image whenever database
 credentials change.
 
+A dockerfile _similar_ to the previous one in [this sample project][0914] will
+produce a valid image, but it fails to run due to the connection string:
+
+```dockerfile
+FROM eclipse-temurin:21-jdk-alpine AS builder
+ADD src /app/src/
+ADD .mvn /app/.mvn/
+ADD pom.xml mvnw /app/
+WORKDIR /app
+RUN ./mvnw package -Dmaven.test.skip=true
+
+FROM eclipse-temurin:21-jre-alpine
+COPY --from=builder /app/target/project015-0.0.1-SNAPSHOT.jar /app/boot.jar
+WORKDIR /app
+ENTRYPOINT java -jar boot.jar
+```
+
+Building with `docker build -t my-app-2 .` and running with
+`docker run --rm my-app-2` should produce the following error:
+
+```bash
+# ...
+        ... 15 common frames omitted
+Caused by: liquibase.exception.UnexpectedLiquibaseException: liquibase.exception.DatabaseException: org.postgresql.util.PSQLException: Connection to localhost:5432 refused. Check that the hostname and port are correct and that the postmaster is accepting TCP/IP connections.
+# ...
+```
+
+In order to make it work, you must override the database url and expose the 8080
+port:
+
+```bash
+docker run --rm  \
+   -e SPRING_DATASOURCE_URL=jdbc:postgresql://192.168.1.182/products \
+   -p 8080:8080 \
+   my-app-2
+```
+
+Every single spring-boot property can be overridden by an equivalent environment
+variable. So, the env var `SPRING_DATASOURCE_URL` overrides the
+`spring.datasource.url` property inside the `application.properties` file.
+
+Finally, the `192.168.1.182` ip address is the current ip associated with the
+host machine. The `localhost` name resolves differently inside the container.
+
 ## Publish image on docker hub or github registry or something else (ECR)
+
+If reuse locally built images on other places is desired, then those images must
+be published into a [docker registry][0916].
