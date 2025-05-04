@@ -175,3 +175,26 @@ host machine. The `localhost` name resolves differently inside the container.
 
 If reuse locally built images on other places is desired, then those images must
 be published into a [docker registry][0916].
+
+The first step is to [login at the registry][0917]. Then tag the image to
+publish accordingly. Finally, `docker push` the image:
+
+```bash
+docker login
+# ...
+docker tag my-enterprise-app:latest sombriks/my-enterprise-app
+docker push sombriks/my-enterprise-app
+```
+
+The `docker login` without arguments logs into [docker hub][0918]. To log into
+other registries simply pass the registry address in the command line:
+
+```bash
+# https://docs.github.com/en/packages/working-with-a-github-packages-registry/working-with-the-container-registry#pushing-container-images
+docker login ghcr.io
+```
+
+Each registry expects a tag strategy. Check the desired registry documentation
+for details.
+
+## Further steps
