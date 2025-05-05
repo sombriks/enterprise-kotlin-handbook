@@ -127,7 +127,7 @@ Another key aspect to take in consideration is how to configure the application
 at runtime. Makes little sense, for example, build a new image whenever database
 credentials change.
 
-A dockerfile _similar_ to the previous one in [this sample project][0914] will
+A dockerfile _similar_ to the previous one in [this sample project][0902] will
 produce a valid image, but it fails to run due to the connection string:
 
 ```dockerfile
@@ -198,3 +198,23 @@ Each registry expects a tag strategy. Check the desired registry documentation
 for details.
 
 ## Further steps
+
+For the [next chapter][0919] will discuss infrastructure built over containers.
+
+[0901]: ./0017-unit-tests-part-2.md
+[0902]: ../samples/project-015-spring-test-mocks/README.md
+[0903]: https://www.docker.com/products/docker-hub
+[0904]: https://docs.docker.com/engine/install
+[0905]: https://docs.docker.com/get-started/docker-concepts/the-basics/what-is-an-image
+[0906]: https://docs.docker.com/get-started/docker-concepts/the-basics/what-is-a-registry
+[0907]: https://hub.docker.com/_/postgres
+[0908]: https://kubernetes.io/docs/concepts/workloads/pods/ephemeral-containers
+[0909]: https://docs.docker.com/get-started/docker-concepts/running-containers/publishing-ports
+[0910]: https://docs.docker.com/reference/dockerfile
+[0911]: https://docs.docker.com/build/concepts/context
+[0912]: ../samples/project-011-spring-boot-example/README.md
+[0913]: https://docs.docker.com/build/building/multi-stage
+[0916]: https://docs.docker.com/get-started/docker-concepts/the-basics/what-is-a-registry
+[0917]: https://docs.aws.amazon.com/AmazonECR/latest/userguide/registry_auth.html
+[0918]: https://hub.docker.com
+[0919]: ./0019-iac-basics.md

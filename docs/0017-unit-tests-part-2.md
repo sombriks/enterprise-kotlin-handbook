@@ -13,16 +13,16 @@ along with cool new ones.
 ## Spring tests basics
 
 Whenever testing spring applications, the IoC container should be available for
-a more realistic test scenario. It can be achieved by simply adding the 
+a more realistic test scenario. It can be achieved by simply adding the
 `@SpringBootTest` annotation in the test class:
 
 ```kotlin
 @SpringBootTest
 class Project015ApplicationTests {
 
-	@Test
-	fun contextLoads() {
-	}
+    @Test
+    fun contextLoads() {
+    }
 
 }
 ```
@@ -144,4 +144,3 @@ Check the [sample project][0803] to see it in action and then head to the
 [0804]: ./0018-container-basics.md
 [0805]: ./0016-spring-with-databases.md
 [0806]: https://en.wikipedia.org/wiki/Integration_testing
-
