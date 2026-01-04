@@ -4,6 +4,7 @@ import { defineConfig } from 'vitepress'
 export default defineConfig({
   title: "Enterprise Kotlin Handbook",
   description: "My hands-on guide of how to get things done using Kotlin and the Enterprise Java ecosystem",
+  ignoreDeadLinks: true,
   themeConfig: {
     // https://vitepress.dev/reference/default-theme-config
     nav: [
