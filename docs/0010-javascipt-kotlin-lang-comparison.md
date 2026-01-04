@@ -58,10 +58,10 @@ There will be a more detailed section on it in the [next chapter][0105].
 | val x = listOf(1,2,3)             | const x = [1,2,3]                        |
 | val y = setOf(1,2,2,3)            | const y = new Set([1,2,3])               |
 | // maps                           |                                          |
-| val x = mapOf("a" to 1, "b" to 2) | const x = { a: 1, b: 2 }                 |
+| val x = mapOf("a" to 1, "b" to 2) | const x = \{ a: 1, b: 2 \}                 |
 | // classes                        |                                          |
 | class X                           | class X {}                               |
-| class Y(val x: String)            | class X { constructor(x) { this.x = x} } |
+| class Y(public val x: String)     | class X { constructor(x) { this.x = x} } |
 
 We'll discuss classes in details [later][0105].
 
@@ -72,8 +72,8 @@ We'll discuss classes in details [later][0105].
 | // lists                                         |                                          |
 | val (first, second) = listOf(1,2,3)              | const [first, second] = [1,2,3]          |
 | // maps (works with [data classes][0116] too)    |                                          |
-| val (first, second) = mapOf("a" to 1, "b" to 2)  | const {a, b} = {a: 1, b: 2}              |
-|                                                  | const {a:first, b:second} = {a: 1, b: 2} |
+| val (first, second) = mapOf("a" to 1, "b" to 2)  | const {a, b} = \{a: 1, b: 2\}              |
+|                                                  | const {a:first, b:second} = \{a: 1, b: 2\} |
 
 ## Communities to talk about the language
 

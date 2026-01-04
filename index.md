@@ -5,15 +5,11 @@ layout: home
 hero:
   name: "Enterprise Kotlin Handbook"
   text: "My hands-on guide of how to get things done using Kotlin and the Enterprise Java ecosystem"
-  tagline: My great project tagline
+  tagline: Hands-on guide on kotlin
   actions:
     - theme: brand
-      text: Markdown Examples
-      link: /markdown-examples
-    - theme: alt
-      text: API Examples
-      link: /api-examples
-
+      text: Get Started
+      link: /README
 features:
   - title: Feature A
     details: Lorem ipsum dolor sit amet, consectetur adipiscing elit
