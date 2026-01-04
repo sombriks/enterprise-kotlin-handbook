@@ -1,0 +1,29 @@
+{
+  "name": "enterprise-kotlin-handbook",
+  "version": "1.0.0",
+  "description": "Some exercises to explore out how modern, enterprise grade **backend services** can be written in kotlin. It's slightly opinionated, proceed at your own risk.",
+  "main": "index.js",
+  "directories": {
+    "doc": "docs"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "docs:dev": "vitepress dev",
+    "docs:build": "vitepress build",
+    "docs:preview": "vitepress preview"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/sombriks/enterprise-kotlin-handbook.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/sombriks/enterprise-kotlin-handbook/issues"
+  },
+  "homepage": "https://github.com/sombriks/enterprise-kotlin-handbook#readme",
+  "devDependencies": {
+    "vitepress": "^2.0.0-alpha.15"
+  }
+}
