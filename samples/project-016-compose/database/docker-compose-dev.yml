@@ -1,0 +1,18 @@
+---
+# set a name for this compose project
+name: dev-env
+services:
+  database:
+    image: postgres:18-alpine
+    restart: always
+    # see more supported variables at https://hub.docker.com/_/postgres
+    environment:
+      POSTGRES_PASSWORD: postgres
+    ports: # expose port so it can be contacted by the host
+      - "5432:5432"
+    healthcheck: # other services can wait by a healthcheck before start
+      test: ["CMD-SHELL", "pg_isready -u postgres"]
+      start_period: 10s
+      interval: 10s
+      timeout: 5s
+      retries: 5
