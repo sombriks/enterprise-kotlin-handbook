@@ -121,11 +121,124 @@ services:
       retries: 5
 ```
 
+### Environment-aware configuration
+
+The same way your spring application can be configured with profiles, properties
+and environment variables overrides, it is possible to do the same with compose
+yaml files:
+
+```yml
+---
+services:
+  app: # `app` will be the hostname for this container
+    image: my-app # assuming you built an image and tagged it as `my-app`
+    environment:
+      PORT: "${PORT:-8080}"
+      SPRING_PROFILES_ACTIVE: "${SPRING_PROFILES_ACTIVE:-dev}"
+    ports:
+      - "${PORT}:${PORT}"
+```
+
+The syntax `${VARIABLE}` replaces the term with a value defined in the host
+running the compose.
+
+The syntax `${VARIABLE:-value}` ensures that a default value will be used when
+the host does not have the environment variable set.
+
 ### Docker swarm
 
-## Kubernetes with k3s
+If you think of compose as a fundamentally singe node tool, you can think of
+[docker swarm][1002] as a first step on load balancing your infrastructure.
 
-### The most common manifest files for docker deployment
+It is quite similar to compose, but adds replication over nodes features and all
+the advantages and complications related to it.
+
+Unlike compose, which works out of the box on any docker installation, you first
+setup your swarm cluster.
+
+See the [swarm tutorial][1003] for details.
+
+## Kubernetes
+
+Another option, and more popular one, is to declare configuration as kubernetes
+manifest files.
+
+Kubernetes is more flexible than swarm, offers more features and extra tools for
+monitoring, healthcheck and general management. it also offers more runtime
+options to manage the actual servers and abstract the infrastructure to serve
+enterprise applications.
+
+A common setup is to offer compose manifests for local development and testing
+but manage staging and production manifests for kubernetes.
+
+### k3s example
+
+The easiest way to develop for a kubernetes environment is
+~~[pay for an overpriced EKS instance at AWS][1004]~~ install [k3s][1005], a
+lightweight kubernetes instance.
+
+On a linux machine, all you need to get k3s up and running is to run the script
+provided in the k3s project:
+
+```bash
+curl -sfL https://get.k3s.io | sh - 
+# Check for Ready node, takes ~30 seconds 
+sudo k3s kubectl get node 
+```
+
+After that, for a local dev environment, tweak the firewall rules:
+
+```bash
+sudo firewall-cmd --permanent --add-port=6443/tcp #apiserver
+sudo firewall-cmd --permanent --zone=trusted --add-source=10.42.0.0/16 #pods
+sudo firewall-cmd --permanent --zone=trusted --add-source=10.43.0.0/16 #services
+sudo firewall-cmd --reload
+```
+
+Finally, check your installation with the following command:
+
+```bash
+sudo kubectl \
+  --kubeconfig /etc/rancher/k3s/k3s.yaml \
+  get pods \
+  --all-namespaces
+```
+
+Specifically with k3s, another common practice is to chmod the `kubeconfig`
+configuration file, so the regular user can check the *cluster* without sudo:
+
+```bash
+sudo chmod 644 /etc/rancher/k3s/k3s.yaml
+mkdir .kube
+# as a bonus, symlink the kubeconfig for the local user as well
+ln -s /etc/rancher/k3s/k3s.yaml ~/.kube/config
+```
+
+Now you can issue commands in a much more ergonomic way:
+
+```bash
+kubectl get pods --all-namespaces
+```
+
+The [kubectl][1006] command is the official tool to manage daily tasks in any
+kubernetes cluster.
+
+You always need a kubeconfig file to interact with a cluster.
+
+Some ides, like intellij and vscode, offers plugins to interact with kubernetes
+clusters
+
+And a really cool tool to deal with cluster is the [k9s][1007] cli:
+
+```bash
+# available on several linux distros, including fedora:
+sudo dnf install k9s
+```
+
+Now you have a minimum kubernetes environment to prepare and configure all your
+enterprise solutions.
+
+### The most common manifest files for kubernetes deployment
 
 #### config-map.yml
 
@@ -136,3 +249,9 @@ services:
 #### ingress.yml
 
 [1001]: https://payara.fish/blog/what-is-an-application-server-jakarta-ee/
+[1002]: https://docs.docker.com/engine/swarm/
+[1003]: https://docs.docker.com/engine/swarm/swarm-tutorial/
+[1004]: https://aws.amazon.com/eks/
+[1005]: https://k3s.io/
+[1006]: https://kubernetes.io/docs/reference/generated/kubectl/kubectl-commands
+[1007]: https://github.com/derailed/k9s
