@@ -238,15 +238,126 @@ sudo dnf install k9s
 Now you have a minimum kubernetes environment to prepare and configure all your
 enterprise solutions.
 
-### The most common manifest files for kubernetes deployment
+## The most common manifest files for kubernetes deployment
 
-#### config-map.yml
+Once the kubernetes node is ready for business, turn your eyes back to the
+application and the specific IaC artifacts for it.
 
-#### deployment.yml
+Ideally you have at least one `docker-compose.yml` for provision the local
+development and the collection of kubernetes artifacts for staging and
+production.
 
-#### service.yml
+Some teams separate those artifacts from the main project repository, making the
+infrastructure invisible to the developers, handing all the environment
+provisioning in the hands of the operations team. This is also called
+[gatekeeping][1008], and causes manual steps instead of full automation. This
+topic will be revisited in the future, but let's
 
-#### ingress.yml
+### config-map.yml
+
+First relevant artifact that a kubernetes deployment should provide is the
+`config-map.yml`. This is where environment variables should be defined:
+
+```yml
+---
+# config-map-my-app.yml
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: config-map-my-app
+data:
+  SPRING_PROFILES_ACTIVE: staging
+  PORT: 8080
+```
+
+You *install* this configuration in the kubernetes cluster by `kubectl apply` it
+from command line:
+
+```bash
+kubectl apply -f config-map-my-app.yml
+```
+
+Then either use k9s to check the new configuration or just use kubectl:
+
+```bash
+kubectl get configmaps
+```
+
+### deployment.yml
+
+The `deployment.yml` is the main IaC artifact in a kubernetes deployment. It
+describes, in detail, which image should be used, how many containers and other
+specifications, like environment configuration, secrets and storage volumes.
+
+```yml
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: deployment-my-app
+  labels:
+    app: my-app
+spec:
+  replicas: 1 # how many containers should be deployed on the cluster
+  selector:
+    matchLabels:
+        app: my-app
+  template: # template for the pods
+    metadata:
+      labels:
+        app: my-app
+    spec:
+      containers:
+        - name: my-app
+          image: some.registry.org/my-app:label
+          ports:
+            - containerPort: 8080
+          env:
+            - name: SPRING_PROFILES_ACTIVE
+              valueFrom: production
+                configMapKeyRef: # get from the config map previously defined
+                  name: config-map-my-app 
+                  key: SPRING_PROFILES_ACTIVE
+```
+
+Again, apply the manifest using `kubectl`.
+
+### service.yml
+
+So far,Two kinds of manifests where applied to the kubernetes cluster. One for
+environment and another for describe the containers.
+
+This one describes how these containers can be accessed by:
+
+```yml
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: service-my-app
+spec:
+  selector:
+    app: my-app
+  ports:
+    - name: tcp-port
+      port: 8080
+      protocol: TCP
+    - name: udp-port
+      port: 8080
+      protocol: UDP
+```
+
+### ingress.yml
+
+Finally, the [ingress configuration][1010] allows the service to be exposed via
+some api gateway solution. this one varies widely on kubernetes solutions, being
+the k3s solution involves install a custom controller.
+
+### The *new* Gateway API
+
+On the other hand, there is the [Gateway API][1011], newer and far more flexible
+than current ingress, which demands one single manifest to all services in the
+cluster.
 
 [1001]: https://payara.fish/blog/what-is-an-application-server-jakarta-ee/
 [1002]: https://docs.docker.com/engine/swarm/
@@ -255,3 +366,6 @@ enterprise solutions.
 [1005]: https://k3s.io/
 [1006]: https://kubernetes.io/docs/reference/generated/kubectl/kubectl-commands
 [1007]: https://github.com/derailed/k9s
+[1008]: https://dev.to/andrewbrown/this-is-what-gatekeeping-look-like-in-the-cloud-industry-j17
+[1010]: https://kubernetes.io/docs/concepts/services-networking/ingress/
+[1011]: https://kubernetes.io/docs/concepts/services-networking/gateway/
